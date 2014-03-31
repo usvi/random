@@ -1,0 +1,472 @@
+Alajärvi
+Alastaro
+Alavieska
+Alavus
+Anjalankoski
+Anttola
+Artjärvi
+Asikkala
+Askainen
+Askola
+Aura
+Dragsfjärd
+Elimäki
+Eno
+Enonkoski
+Enontekiö
+Enontekiö, Kaaresuvanto
+Enontekiö, Kilpisjärvi
+Enontekiö, Kivilompolo
+Enontekiö, Palojoensuu
+Espoo
+Eura
+Eurajoki
+Evijärvi
+Forssa
+Haapajärvi
+Haapavesi
+Hailuoto
+Halikko
+Halsua
+Hamina
+Hankasalmi
+Hanko
+Harjavalta
+Hartola
+Hattula
+Hauho
+Haukipudas
+Haukivuori
+Hausjärvi
+Heinola (yhdistetty)
+Heinävesi
+Helsinki
+Himanka
+Hirvensalmi
+Hollola
+Honkajoki
+Houtskari
+Huittinen
+Humppila
+Hyrynsalmi
+Hyvinkää
+Hämeenkoski
+Hämeenkyrö
+Hämeenlinna
+Ii
+Iisalmi
+Iitti
+Ikaalinen
+Ilmajoki
+Ilomantsi
+Imatra
+Inari kko
+Inari, Ivalo
+Inari, Näätämö
+Inari, Raja-Jooseppi
+Inari, Repojoki
+Iniö, Laupunen, Kustavi
+Inkoo
+Isojoki
+Isokyrö
+Jaala
+Jalasjärvi
+Janakkala
+Joensuu
+Jokioinen
+Joroinen
+Joutsa
+Joutseno
+Juankoski
+Jurva
+Juuka
+Juupajoki
+Juva
+Jyväskylä
+Jyväskylä, Säynätsalo
+Jyväskylän mlk, Palokka
+Jyväskylän mlk, Tikkakoski
+Jyväskylän mlk, Vaajakoski
+Jämijärvi
+Jämsä
+Jämsä, Kaipola
+Jämsänkoski
+Jäppilä
+Järvenpää
+Kaarina
+Kaavi
+Kajaani
+Kalajoki
+Kalvola
+Kangasala
+Kangaslampi
+Kangasniemi
+Kankaanpää
+Kannonkoski
+Kannus
+Karijoki
+Karinainen
+Karjaa
+Karjalohja
+Karkkila
+Karstula
+Karttula
+Karvia
+Kaskinen
+Kauhajoki
+Kauhava
+Kauniainen
+Kaustinen
+Keitele
+Kemi
+Kemijärvi
+Keminmaa
+Kemiö
+Kempele
+Kerava
+Kerimäki
+Kestilä
+Kesälahti
+Keuruu
+Keuruu, Haapamäki
+Kihniö
+Kiihtelysvaara
+Kiikala
+Kiikoinen
+Kiiminki
+Kinnula
+Kirkkonummi
+Kisko
+Kitee
+Kittilä
+Kiukainen
+Kiuruvesi
+Kivijärvi
+Kodisjoki
+Kokemäki
+Kokkola
+Kolari
+Konnevesi
+Kontiolahti
+Korpilahti
+Korppoo
+Korsnäs
+Kortesjärvi
+Koski
+Kotka
+Kouvola
+Kristiinankaupunki
+Kruunupyy
+Kuhmalahti
+Kuhmo
+Kuhmo, Vartius, raja
+Kuhmoinen
+Kuivaniemi
+Kullaa
+Kuopio
+Kuopio, Riistavesi
+Kuorevesi
+Kuortane
+Kurikka
+Kuru
+Kustavi
+Kuusamo
+Kuusankoski
+Kuusjoki
+Kylmäkoski
+Kyyjärvi
+Kälviä
+Kärkölä
+Kärsämäki
+Köyliö
+Lahti
+Laihia
+Laitila
+Lammi
+Lapinjärvi
+Lapinlahti
+Lappajärvi
+Lappeenranta
+Lappeenranta, Nuijamaa
+Lappi tl
+Lapua
+Laukaa
+Laukaa, Lievestuore
+Lavia
+Lehtimäki
+Leivonmäki
+Lemi
+Lempäälä
+Lemu
+Leppävirta
+Lestijärvi
+Lieksa
+Lieksa, Koli
+Lieto
+Liljendal
+Liminka
+Liperi
+Lohja (yhdistetty)
+Lohtaja
+Loimaa
+Loimaan mlk
+Loppi
+Loviisa
+Luhanka
+Lumijoki
+Luopioinen
+Luoto
+Luumäki
+Luvia
+Längelmäki
+Maalahti
+Maaninka
+Maksamaa
+Marttila
+Masku
+Mellilä
+Merijärvi
+Merikarvia
+Merimasku
+Miehikkälä
+Mietoinen
+Mikkeli
+Mikkeli, Otava
+Mouhijärvi
+Muhos
+Multia
+Muonio
+Mustasaari
+Mustasaari, Raippaluoto
+Muurame
+Muurla
+Mynämäki
+Myrskylä
+Mäntsälä
+Mänttä
+Mäntyharju
+Naantali
+Nakkila
+Nastola
+Nauvo
+Nilsiä
+Nivala
+Nokia
+Noormarkku
+Nousiainen
+Nummi-Pusula
+Nurmes
+Nurmijärvi
+Nurmo
+Närpiö
+Oravainen
+Orimattila
+Oripää
+Orivesi
+Oulainen
+Oulu
+Oulunsalo
+Outokumpu
+Padasjoki
+Paimio
+Paltamo
+Parainen
+Parikkala
+Parkano
+Pattijoki
+Pedersöre
+Pelkosenniemi
+Pello
+Perho
+Pernaja
+Perniö
+Pertteli
+Pertunmaa
+Peräseinäjoki
+Petäjävesi
+Pieksämäki
+Pieksänmaa, kesk.
+Pielavesi
+Pietarsaari
+Pihtipudas
+Piikkiö
+Piippola
+Pirkkala
+Pohja
+Polvijärvi
+Pomarkku
+Pori
+Pori, Meri-Pori
+Pornainen
+Porvoo (yhdistetty)
+Posio
+Pudasjärvi
+Pukkila
+Pulkkila
+Punkaharju
+Punkalaidun
+Puolanka
+Puumala
+Pyhtää
+Pyhäjoki
+Pyhäjärvi
+Pyhäntä
+Pyhäranta
+Pyhäselkä
+Pylkönmäki
+Pälkäne
+Pöytyä
+Raahe
+Raisio
+Rantasalmi
+Rantsila
+Ranua
+Rauma
+Rautalampi
+Rautavaara
+Rautjärvi
+Reisjärvi
+Renko
+Riihimäki
+Ristiina
+Ristijärvi
+Rovaniemi, Saarenkylä
+Rovaniemi, Meltaus
+Rovaniemi, Pirttikoski
+Rovaniemi
+Ruokolahti
+Ruotsinpyhtää
+Ruovesi
+Rusko
+Ruukki
+Rymättylä
+Rääkkylä
+Saari
+Saarijärvi
+Sahalahti
+Salla
+Salo
+Sammatti
+Sauvo
+Savitaipale
+Savonlinna
+Savonranta
+Savukoski
+Seinäjoki
+Sievi
+Siikainen
+Siikajoki
+Siilinjärvi
+Simo
+Sipoo
+Siuntio
+Sodankylä
+Sodankylä, Vuojärvi
+Sodankylä, Vuotso
+Soini
+Somero
+Sonkajärvi
+Sonkajärvi, Sukeva
+Sotkamo
+Sulkava
+Sumiainen
+Suodenniemi
+Suolahti
+Suomenniemi
+Suomusjärvi
+Suomussalmi, kko.
+Suomussalmi, Ämmänsaari
+Suonenjoki
+Sysmä
+Säkylä
+Särkisalo
+Taipalsaari
+Taivalkoski
+Taivassalo
+Tammela
+Tammisaari
+Tammisaari, Tenhola
+Tampere
+Tarvasjoki
+Temmes
+Tervo
+Tervola
+Teuva
+Tohmajärvi
+Toholampi
+Toijala
+Toivakka
+Tornio
+Turku
+Tuulos
+Tuupovaara
+Tuusniemi
+Tuusula
+Tyrnävä
+Töysä
+Töysä, Tuuri
+Ullava
+Ulvila
+Urjala
+Utajärvi
+Utsjoki, Karigasniemi
+Utsjoki, Nuorgam
+Utsjoki, Utsjoki
+Uukuniemi
+Uurainen
+Uusikaarlepyy
+Uusikaupunki
+Uusikaupunki, Kalanti
+Vaala
+Vaasa
+Vahto
+Valkeakoski
+Valkeala
+Valtimo
+Vammala
+Vampula
+Vantaa
+Varkaus
+Varpaisjärvi
+Vehkalahti
+Vehmaa
+Vehmersalmi
+Velkua
+Vesanto
+Vesilahti
+Veteli
+Vieremä
+Vihanti
+Vihti
+Viiala
+Viitasaari
+Viljakkala
+Vilppula
+Vimpeli
+Virolahti
+Virolahti, Vaalimaa, raja
+Virrat
+Virtasalmi
+Vuolijoki
+Vähäkyrö
+Värtsilä kko
+Värtsilä, Niirala, raja
+Västanfjärd
+Vöyri
+Yli-Ii
+Ylihärmä
+Ylikiiminki
+Ylistaro
+Ylitornio
+Ylivieska
+Ylämaa
+Yläne
+Ylöjärvi
+Ypäjä
+Äetsä
+Ähtäri
+Äänekoski
+Äänekoski, Konginkangas
+
+
+

@@ -1,0 +1,486 @@
+1 Päärakennus ;;
+ ;1A ;Y202a 
+ ;1A0 ;A037 
+ ;1A1 ;A123 
+ ;1A125b ;A125b 
+ ;1A2 ;A215 
+ ;1A304 ;A304 
+ ;1A308 ;A308 
+ ;1AAula ;ala-aula 
+ ;1AP1 ;A122a 
+ ;1AP2 ;A235f 
+ ;1AP3 ;A309 
+ ;1AS0 ;A034 
+ ;1AS1 ;A124 
+ ;1AS2 ;A221 
+ ;1AS3 ;A307 
+ ;1ATK1 ;A046a 
+ ;1ATK2 ;A046b 
+ ;1B ;Y203a 
+ ;1C ;Y205 
+ ;1D ;Y122 
+ ;1E ;Y124 
+ ;1F ;U141 
+ ;1G ;U142 
+ ;1H ;U147 
+ ;1H304 ;Hallituksen istuntosali 
+ ;1H310 ;H4 
+ ;1J ;U149 
+ ;1K ;U154 
+ ;1K014 ;K014 
+ ;1K101 ;H1 
+ ;1K102 ;H2 
+ ;1K104 ;H3 
+ ;1KON ;A222 
+ ;1L ;U270 
+ ;1M ;U157 
+ ;1M1 ;M232 
+ ;1M102 ;M102 
+ ;1M129 ;M129 
+ ;1M134 ;M134 
+ ;1M145b ;M145b 
+ ;1M2 ;M233 
+ ;1M203 ;M203 
+ ;1M205 ;M205 
+ ;1M240 ;M240 
+ ;1M3 ;M234 
+ ;1M315 ;M315 
+ ;1M329 ;M329 
+ ;1M330 ;M330 
+ ;1M4 ;M220 
+ ;1M5 ;M140 
+ ;1MAP ;A131a 
+ ;1MAula ;mellin-aula 
+ ;1MS1 ;A128 
+ ;1N ;U271 
+ ;1Oppilaslabra ;Y156 
+ ;1U130 ;U130 
+ ;1U131 ;U131 
+ ;1U261 ;U261 
+ ;1U262 ;U262 
+ ;1U264 ;U264 
+ ;1U322 ;U322 
+ ;1U325 ;U325 
+ ;1U344 ;U344 
+ ;1U345 ;U345 
+ ;1U352 ;U352 
+ ;1U353 ;U353 
+ ;1U356 ;U356 
+ ;1U358 ;U358 
+ ;1U401b ;U401b 
+ ;1U402 ;U402 
+ ;1U405a ;U405a 
+ ;1U405b ;U405b 
+ ;1U406a ;U406a 
+ ;1U409 ;U409 
+ ;1U410b ;U410b 
+ ;1U413a ;U413a 
+ ;1U414a ;U414a 
+ ;1U414b ;U414b 
+ ;1U502 ;U502 
+ ;1U503 ;U503 
+ ;1U510 ;U510 
+ ;1U511 ;U511 
+ ;1U513 ;Iso neukkari 
+ ;1U521 ;U521 
+ ;1Unelias ;U351 
+ ;1VT1 ;VT1 
+ ;1VT2 ;VT2 
+ ;1Y195 ;Y195 
+ ;1Y197 ;Y197 
+ ;1Y198 ;Y198 
+ ;1Y199a ;Y199a 
+ ;1Y199c ;Y199c 
+ ;1Y225a ;Paja 
+ ;1Y227 ;Y227 
+ ;1Y228a ;Y228a 
+ ;1Y307 ;Y307 
+ ;1Y308a ;H5 
+ ;1Y308b ;Y308b 
+ ;1Y308c ;Y308c 
+ ;1Y309a ;Y309a 
+ ;1Y309b ;Y309b 
+ ;1Y309c ;Y309c 
+ ;1Y313 ;Y313 
+ ;1Y323 ;Y323 
+ ;1Y338c ;Y338c 
+ ;1Y339a ;Y339a 
+ ;1Y339b ;Y339b 
+ ;1Y342a ;Y342a 
+ ;1Y344 ;Y344 
+ ;1Y404 ;H6 
+ ;1Y405 ;Y405 
+ ;1Y421 ;Y421/minineukkari-itseopiskelu 
+ ;1Y423 ;Y423 
+ ;1Y427a ;Y427a 
+ ;1Y427b ;Y427b 
+ ;1Y429a ;Y429a 
+ ;1Y429c ;Y429c 
+ ;1Y430a ;Y430a 
+ ;1Y430b ;Y430b 
+ ;1YAula ;ylä-aula 
+2 Rakennus- ja ympäristötekniikka ;;
+ ;2CADluokka ;267
+ ;2266;266
+ ;2355;355
+ ;2226b ;226b 
+ ;2K2 ;165
+ ;2R1 ;160a 
+ ;2R2 ;253
+ ;2R3 ;255
+ ;2R4 ;264a 
+ ;2R5 ;265
+ ;2R6 ;351a 
+ ;2R7 ;351b 
+ ;2R8 ;352
+ ;2R9 ;309/ videoneuvottelu 
+3 Teknillinen fysiikka ; ; 
+ ;3Auditorio ;F239a 
+ ;3F115 ;F115 
+ ;3F122 ;F122 
+ ;3F138 ;F138 
+ ;3F158 ;F158 
+ ;3F178a ;F178a 
+ ;3F227 ;F227 
+ ;3F254 ;F254 
+ ;3F255 ;F255 
+ ;3F257 ;F257 
+ ;3F258 ;F258 
+ ;3F259 ;F259 
+ ;3F301b ;F301b 
+ ;3F332 ;F332 
+ ;3F333 ;F333 
+ ;3F334 ;F334 
+ ;3F335 ;F335 
+ ;3F336 ;F336 
+ ;3F401 ;F401 
+ ;3Luentosali1 ;F175a 
+ ;3Luentosali2 ;F175b 
+4 Sähkö- ja tietoliikennetekniikka ; ; 
+ ;4E110 ;E110 
+ ;4E111 ;E111 
+ ;4E127 ;Kuunteluhuone 
+ ;4E220 ;Strömberg 
+ ;4B201b ;B201b 
+ ;4C215 ;C215 
+ ;4C226 ;C226 
+ ;4D302 ;D302 
+ ;4F201 ;F201 
+ ;4F401 ;F401 
+ ;4F402 ;F402 
+ ;4G116a ;G116a 
+ ;4G236 ;G236 
+ ;4G336 ;G336 
+ ;4H302 ;H302 
+ ;4H402 ;H402 
+ ;4I212DC ;I212 Matalataajuuspuoli 
+ ;4I212RF ;I212 Radiotaajuuspuoli 
+ ;4I256 ;I256 
+ ;4I346 ;I346 
+ ;4I407 ;I407 
+ ;4K203 ;Iso kaiuton huone 
+ ;4K204 ;Monikanavahuone 
+ ;4K205 ;Pieni kaiuton huone 
+ ;4L213 ;L213 
+ ;4L304 ;L304 
+ ;4L310 ;L310 
+ ;4L311a ;L311a 
+ ;4L311b ;L311b 
+ ;4S1 ;A102 
+ ;4S2 ;A101 
+ ;4S3 ;A205 
+ ;4S4 ;A202 
+ ;4S5 ;L306 
+5 Konetekniikka 4 ; ; 
+ ;5VSauna ;Virtauksen sauna 
+ ;5172;172
+ ;5339;339
+ ;5354;354
+6 Konetekniikka 3 ;6luentosali ;118
+ ;6pikkupalaveri ;226
+ ;6seminaari ;117a 
+7 Konetekniikka 2 ; ; 
+ ;7211a ;211a 
+ ;7223;223
+8 Konetekniikka 1 ; ; 
+ ;8101;101
+ ;8148;148
+ ;8149;149
+ ;8150;150
+ ;8201;201
+ ;8202;202
+ ;8215;215
+ ;8216;216
+ ;8323;323
+ ;8326;326
+ ;8342;342
+ ;8345;345
+ ;8348;348
+ ;8157b ;157b 
+ ;8203b ;203b 
+ ;8213a ;213a 
+ ;8237c ;237c 
+ ;8302b ;302b 
+ ;8324b ;324b 
+ ;8343b ;343b 
+ ;8CAEluokka ;344
+9 Nano-talo ; ; 
+ ;9161;161
+ ;9204;204
+ ;9227;227
+ ;9228;228
+11 Kemian tekniikka ; ; 
+ ;11A303 ;A303 
+ ;11C229 ;C229 
+ ;11D422 ;D422 
+ ;11F505b ;F505b 
+ ;11Ke5 ;D311 
+ ;11Luentosali1 ;A305 
+ ;11Luentosali2 ;A304 
+ ;11Luentosali3 ;A302 
+ ;11Luentosali4 ;C301 
+ ;11Luentosali6 ;D301a 
+ ;11luokka1 ;B016 
+ ;11luokka2 ;B017 
+ ;11luokka3 ;B018 
+12 Materiaalitekniikka ; ; 
+ ;12010;Oppimistilan neuvotteluhuone 
+ ;12011;11
+ ;1223;ADP-tila (SmartBoard) 
+ ;1226;APD (Dataprojektori) 
+ ;12109;Kanslian kokoushuone 
+ ;12144;144
+ ;12147;juhla-aula 
+ ;12160b ;160b 
+ ;12232;232
+ ;12242;242
+ ;12305a ;sauna 
+ ;12B157 ;Kirjaston neuvotteluhuone 
+ ;12B212 ;Neuvotteluhuone 1 
+ ;12B213 ;Neuvotteluhuone 2 
+ ;12B380 ;B380 
+ ;12Kalliotekniikka ;B205 
+ ;12KorroosioJaMVTsemina ;B236 
+ ;12LuentosaliV2 ;145
+ ;12MateriaalitieteenSem ;225
+ ;12MekProsSemina ;B306 
+ ;12MetallurgianSemina ;B329 
+ ;12V1 ;C100 
+ ;12V3 ;C101 
+13 Puunjalostustekniikka 1 ; ; 
+ ;13237;237
+ ;13Halko ;Halko / 220 
+ ;13Kuitu ;Kuitu / 225 
+ ;13L1 ;241
+ ;13L2 ;240
+ ;13Lastu ;Lastu / 228 
+ ;13Pihka ;Pihka / 322 
+ ;13Pulpperi ;Pulpperi / 140 
+14 Puunjalostustekniikka 2 ; ; 
+ ;14218a ;218a 
+ ;14121;121
+ ;14122;122
+ ;14123;123
+ ;14128;Kanto 
+ ;14129;Kaarna 
+ ;14130;Käpy 
+ ;14218b ;218b 
+15 Kirjasto ;15126;126
+ ;15127;127
+ ;15213;213
+16 Laivatekniikka ;16127;127
+ ;16134;134
+ ;16103b ;Neuvotteluhuone 
+ ;16108c ;108c 
+ ;161Cseminaarisali ;205
+ ;16ATKluokka ;104a 
+ ;16L204 ;L204 
+17 Maarintalo ; ; 
+ ;17203;203
+ ;17204;204
+ ;17205;205
+ ;17206;206
+ ;17207;207
+ ;17211;211
+ ;17212;212
+ ;17214;214
+ ;17215;215
+ ;17216;216
+ ;17218;218
+ ;17219;219
+ ;17220;220
+ ;17221;221
+ ;17222;222
+ ;17224;224
+ ;17226;226
+ ;17227;227
+ ;17229;229
+ ;17245;245
+ ;17255;255
+ ;17258;258
+ ;17260;260
+ ;17262;262
+ ;17264;264
+ ;17266;266
+ ;17268;268
+ ;17Maari-A ;167
+ ;17Maari-B ;Mikroluokka 5 
+ ;17Maari-C ;Mikroluokka 3 
+ ;17Maari-D ;186
+ ;17Maari-E ;172
+ ;17Maari-F ;159
+ ;17Maari-K ;243
+ ;17Maari-L ;242
+ ;17Maari-M ;278
+22 Lämpömiehenkuja 2 ; ; 
+ ;22Alvar/Aino/Elissa ;C110-C114 
+ ;22BakerHouse ;C212 
+ ;22C208 ;C208 
+ ;22C209 ;C209 
+ ;22C216 ;C216 
+ ;22C259 ;C259 
+ ;22NeueVahr ;C211 
+ ;22VillaKokkonen ;C230 
+ ;22VillaTammekann ;C210 
+27 Arkkitehtuuri/Paja ; ; 
+ ;27305;305
+ ;27PS1 ;306
+ ;27PS2 ;310
+28 YTK ; ; 
+ ;28YTKluento ;215
+ ;28307;307
+29 Sähkötalo 1 ; ; 
+ ;29ST1 ;223
+ ;29203;Edison 
+ ;29212;Maxwell 
+ ;29231;231
+ ;29271;271
+ ;29326;326
+ ;29329;329
+ ;29330;330
+ ;29331;331
+ ;29341;341
+ ;29379; 
+ ;29381;H1 
+ ;29428;428
+ ;29432;432
+ ;29433;433
+30 Tietotekniikka ; ; 
+ ;30A106 ;A106 
+ ;30A117 ;A117 
+ ;30A120 ;A120 
+ ;30A123 ;A123 
+ ;30A136 ;A136 
+ ;30A142 ;A142 
+ ;30A211 ;A211 
+ ;30A218 ;A218 
+ ;30A225 ;A225 
+ ;30A232 ;A232 
+ ;30A243 ;A243 
+ ;30A319 ;A319 
+ ;30A322 ;A322 
+ ;30A328 ;A328 
+ ;30A346 ;A346 
+ ;30B115 ;B115 
+ ;30B122 ;B122 
+ ;30B130 ;B130 
+ ;30B219 ;B219 
+ ;30B353 ;B353 
+ ;30B357 ;B357 
+ ;30C106 ;C106 
+ ;30C307 ;C307 
+ ;30T1 ;C202 
+ ;30T2 ;C105 
+ ;30T3 ;C206 
+ ;30T4 ;A238 
+ ;30T5 ;A133 
+ ;30TSauna ;T-talon sauna 
+32 HTC ; ; 
+ ;32CA504 ;CA504 
+ ;32CB504 ;CB504 
+ ;32CB604 ;CB604 
+33 Innopoli 2 ; ; 
+ ;33A314 ;A314 
+ ;33A317 ;A317 
+ ;33A325 ;A325 
+ ;33A346 ;A346 
+ ;33B317 ;Atlantis 
+ ;33B345 ;Mars 
+ ;33C313 ;Saturnus 
+ ;33C325 ;Merkurius 
+ ;33C331 ;C331 
+ ;33C412 ;C412 
+ ;33C414 ;C414 
+ ;33C424 ;C424 
+ ;33C425 ;C425 
+ ;33C432 ;Seminaarisali 
+ ;33D320 ;D320 
+ ;33E332 ;E332 
+ ;33E432 ;E432 
+ ;33E456 ;E456 
+34 Vesilaboratorio ; ; 
+ ;34286;286
+ ;34287;287
+35 Falcon Gentti ; ; 
+ ;351.015;Opetustila 1 
+ ;351.016;Opetustila 2 
+ ;351.017;Opetustila 3 
+ ;351.018;Neuvotteluhuone 1 
+ ;351.019;Neuvotteluhuone 2 
+ ;351.061;Neuvotteluhuone 
+ ;351.062;Opetustila 
+36 Micronova ; ; 
+ ;36MSauna ;Micronovan sauna 
+ ;361167;1167
+ ;362159;2159
+ ;362183;Shockley 
+ ;362186;"Bardeen" 
+ ;362187;"Battain" 
+ ;364109;4109
+ ;364121;4121
+ ;364167;4167
+ ;364172;4172
+ ;36Iso-sali ;2190
+ ;36Pieni-sali ;2191
+37 TUAS ; ; 
+ ;37AS1 ;1018
+ ;371135;1135
+ ;371141;1141
+ ;371142;1142
+ ;371143;1143
+ ;371144;1144
+ ;371592;1592
+ ;371593;1593
+ ;371594;1594
+ ;371595;1595
+ ;371596;ruokalan kabinetti 
+ ;372103;2103
+ ;372104;2104
+ ;372179;2179
+ ;373103;3103
+ ;373104;3104
+ ;373550;3550
+ ;373551;3551
+ ;374126;4126
+ ;371021-1022 ;1021-1022 
+ ;371023-1024 ;1023-1024 
+ ;371165-66 ;1165-66 
+ ;371171-72 ;1171-72 
+ ;371174-1176 ;1174-1176 
+ ;371521-1522 ;1521-1522 
+ ;372534-2535 ;2534-2535 
+ ;3737/1001 ;ala-aula 
+ ;3737/2001 ;ylä-aula 
+ ;37AS2 ;2006
+ ;37AS3 ;1621
+ ;37Odeion ;Odeion / 2007 
+ ;37TU1 ;1017
+ ;37TU2 ;2005
+ ;37TU3 ;1194
+ ;37TU4 ;1195
+ ;37TU5 ;1199
+ ;37TU6 ;1200
+ ;37TU7 ;1201
+ ;37TU8 ;4125
+ ;37TUAula ;aula 
+ ;37TUSauna ;TUAS-talon sauna 
