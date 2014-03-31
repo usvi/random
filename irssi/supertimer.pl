@@ -76,6 +76,38 @@ sub load_timers
 }
 
 
+sub save_timers
+{
+    open(timer_file_handle, ">", $timer_file);
+    #print(timer_file_handle $network . " = {\n");
+
+    for my $network ( keys %timer_list )
+    {
+	print(timer_file_handle $network . " = {\n");
+
+        for my $channel ( keys %{$timer_list{$network}})
+        {
+	    print(timer_file_handle " " . $channel . " = {\n");
+
+	    for my $nick ( keys %{$timer_list{$network}{$channel}})
+	    {
+		print(timer_file_handle "  " . $nick . " = {\n");
+
+		foreach(sort(keys(%{$timer_list{$network}{$channel}{$nick}})))
+		{
+		    print(timer_file_handle "   " . $_ . ":" . $timer_list{$network}{$channel}{$nick}{$_} . "\n");
+		}
+		print(timer_file_handle "  }\n");
+	    }
+	    print(timer_file_handle " }\n");
+        }
+	print(timer_file_handle "}\n");
+    }
+    close(timer_file_handle);
+}
+
+
+
 sub list_timers
 {
     my $i = 1;
