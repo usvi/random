@@ -103,9 +103,12 @@ sub list_timers
 }
 
 
+#If called with params "network, nick", searches the latest addition by the user
+#If called without params, searches the next timer that will trigger
 sub get_next_timeout
 {
-    my $next_add_time = 3396211122;
+    my @input_params = @_;
+    my $next_time = 0;
     my @timeout_params;
 
     for my $network ( keys %timer_list )
@@ -120,10 +123,23 @@ sub get_next_timeout
 
 		    if($temp_line =~ /([0-9]+)\:(.*)/)
 		    {
-			if(($1 + 0) < $next_add_time)
+			# Nick search, searching for latest addition time
+			if(@input_params == 2 && lc($input_params[0]) eq lc($network) && lc($input_params[1]) eq lc($nick) )
 			{
-			    @timeout_params = ($network, $channel, $nick, $_, $2);
-			    $next_add_time = ($1 + 0);
+			    if($next_time == 0 || ($_ + 0) > $next_time)
+			    {
+				@timeout_params = ($network, $channel, $nick, $_, $1, $2);
+				$next_time = ($_ + 0);
+			    }
+			}
+			# Next search, searching for next trigger time
+			else
+			{
+			    if($next_time == 0 || ($1 + 0) < $next_time)
+			    {
+				@timeout_params = ($network, $channel, $nick, $_, $1, $2);
+				$next_time = ($1 + 0);
+			    }
 			}
 		    }
 		}
@@ -143,25 +159,23 @@ sub activate_next_timer
 	Irssi::timeout_remove($timer_reference);
 	$timer_reference = 0;
     }
-    #my ($network, $channel, $nick, $add_time, $2)
+    #my ($network, $channel, $nick, $add_time, $trig_time, $reason)
     my @timeout_params = get_next_timeout("", "");
 
     if($timeout_params[0] ne "")
     {
 	print("Next timeout in " . ($timeout_params[3] - time()));
-	$timer_reference = Irssi::timeout_add_once(10 + ($timeout_params[3] - time()) * 1000, 'announce_timer',
-						   ($timeout_params[0], $timeout_params[1], $timeout_params[2], $timeout_params[3], $timeout_params[4]));
+	$timer_reference = Irssi::timeout_add_once(10 + ($timeout_params[3] - time()) * 1000, 'announce_timer', join(":", @timeout_params));
     }
 }
 
 sub announce_timer
 {
-    my ($network, $channel, $nick, $add_time, $reason) = @_;
-    print("Timeout announced:$reason");
+    my ($network, $channel, $nick, $add_time, $trig_time, $reason) = split(/\:/, $_[0], 6);
     $timer_reference;
     remove_timer($network, $channel, $nick, $add_time);
     sanitize_timers();
-    list_timers();
+    #save_timers();
     activate_next_timer();
 }
 
@@ -169,7 +183,6 @@ sub announce_timer
 sub remove_timer
 {
     my ($network, $channel, $nick, $add_time) = @_;
-    print("Deleting $network, $channel, $nick, $add_time");
     delete($timer_list{$network}{$channel}{$nick}{$add_time});
 }
 
