@@ -196,18 +196,18 @@ sub activate_next_timer
 
     if($timeout_params[0] ne "")
     {
-	print("Next timeout in " . ($timeout_params[3] - time()));
-	$timer_reference = Irssi::timeout_add_once(10 + ($timeout_params[3] - time()) * 1000, 'announce_timer', join(":", @timeout_params));
+	print("Next timeout in " . ($timeout_params[4] - time()));
+	$timer_reference = Irssi::timeout_add_once(10 + ($timeout_params[4] - time()) * 1000, 'announce_timer', join(":", @timeout_params));
     }
 }
 
 sub announce_timer
 {
     my ($network, $channel, $nick, $add_time, $trig_time, $reason) = split(/\:/, $_[0], 6);
-    $timer_reference;
+    print("Timeout occurred: $reason");
     remove_timer($network, $channel, $nick, $add_time);
     sanitize_timers();
-    #save_timers();
+    save_timers();
     activate_next_timer();
 }
 
@@ -244,10 +244,22 @@ sub sanitize_timers
     }
 }
 
+sub debug_timer
+{
+    $timer_list{"net"} = ();
+    $timer_list{"net"}{"private"} = ();
+    $timer_list{"net"}{"private"}{"testnick"} = ();
+    $timer_list{"net"}{"private"}{"testnick"}{time()} = (time() + 4) . ":Debugreason";
+    save_timers();
+    activate_next_timer();
+}
+
 
 
 Irssi::command_bind("stload", "load_timers");
+Irssi::command_bind("stsave", "save_timers");
 Irssi::command_bind("stprint", "list_timers");
+Irssi::command_bind("stdebug", "debug_timer");
 
 load_timers();
 activate_next_timer();
