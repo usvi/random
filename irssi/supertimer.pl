@@ -84,7 +84,6 @@ sub load_timers
 sub save_timers
 {
     open(timer_file_handle, ">", $timer_file);
-    #print(timer_file_handle $network . " = {\n");
 
     for my $network ( keys %timer_list )
     {
@@ -193,12 +192,12 @@ sub activate_next_timer
 	Irssi::timeout_remove($timer_reference);
 	$timer_reference = 0;
     }
-    #my ($network, $channel, $nick, $add_time, $trig_time, $reason)
     my @timeout_params = get_next_timeout("", "");
+    my $wait_time_msecs = 10 + ($timeout_params[4] - time()) * 1000;
 
-    if($timeout_params[0] ne "")
+    if(@timeout_params > 0 && $wait_time < 2144505010)
     {
-	$timer_reference = Irssi::timeout_add_once(10 + ($timeout_params[4] - time()) * 1000, 'announce_timer', join(":", @timeout_params));
+	$timer_reference = Irssi::timeout_add_once($wait_time_msecs, 'announce_timer', join(":", @timeout_params));
     }
 }
 
@@ -288,7 +287,7 @@ sub check_for_commands
 	#        2014-04-03 16.34.41 Reason
 	if($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})[ ]+([0-9]{1,2})[\:\.]([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
 	{
-	    $timestamp = timelocal($6, $5, $4, $3, $2, $1);
+	    $timestamp = timelocal($6, $5, $4, $3, $2 - 1, $1);
 	    $reason = $7;
 	    $command = "add";
 	}
@@ -296,14 +295,14 @@ sub check_for_commands
 	#        2014-04-03 16.34 Reason
 	elsif($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})[ ]+([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
 	{
-	    $timestamp = timelocal(0, $5, $4, $3, $2, $1);
+	    $timestamp = timelocal(0, $5, $4, $3, $2 - 1, $1);
 	    $reason = $6;
 	    $command = "add";
 	}
 	# Trying 2014-04-03 Reason
 	elsif($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})(.*)/)
 	{
-	    $timestamp = timelocal(0, 0, 0, $3, $2, $1);
+	    $timestamp = timelocal(0, 0, 0, $3, $2 - 1, $1);
 	    $reason = $4;
 	    $command = "add";
 	}
@@ -322,10 +321,9 @@ sub check_for_commands
 	{
 	    $command = "nuke";
 	}
-	$timestamp = ($timestamp > time() ? $timestamp : 0);
 	$reason =~ s/^\s+|\s+$//g;
 
-	if($command eq "add" && $timestamp > 0)
+	if($command eq "add" && ($timestamp > time()))
 	{
 	    #my ($network, $channel, $nick, $add_time, $trig_time, $reason) = @_;
 	    add_timer($server->{tag}, ($channel ? $channel : "private"), $nick, time(), $timestamp, $reason);
