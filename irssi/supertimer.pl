@@ -220,6 +220,26 @@ sub remove_timer
 }
 
 
+sub add_timer
+{
+    my ($network, $channel, $nick, $add_time, $trig_time, $reason) = @_;
+
+    if(!exists($timer_list{$network}))
+    {
+	$timer_list{$network} = ();
+    }
+    if(!exists($timer_list{$network}{$channel}))
+    {
+	$timer_list{$network}{$channel} = ();
+    }
+    if(!exists($timer_list{$network}{$channel}{$nick}))
+    {
+	$timer_list{$network}{$channel}{$nick} = ();
+    }
+    $timer_list{$network}{$channel}{$nick}{$add_time} = "$trig_time:$reason";
+}
+
+
 sub sanitize_timers
 {
     for my $network ( keys %timer_list )
@@ -265,11 +285,6 @@ sub check_for_commands
     {
         $msg =~ s/^\![a-zA-Z]+//;
         $msg =~s/^[ ]+//;
-
-
-        #my @cmd_args = ($nick, $server, ($channel ? $channel : 0), $msg);
-        #my $timer_result = handle_timer_command(@cmd_args);
-	#$server->command("MSG " . ($channel ? $channel . " " . $nick . ":" : $nick) . " " . $timer_result);
         my $timestamp = 0;
 	my $reason = "";
 	my $command = "";
@@ -311,9 +326,18 @@ sub check_for_commands
 	{
 	    $command = "nuke";
 	}
-	if($command ne "")
+	$timestamp = ($timestamp > time() ? $timestamp : 0);
+
+	if($command eq "add" && $timestamp > 0)
 	{
-	    print("Command:$command; timestamp:$timestamp; reason:$reason");
+	    #my ($network, $channel, $nick, $add_time, $trig_time, $reason) = @_;
+	    add_timer($server->{tag}, ($channel ? $channel : "private"), $nick, time(), $timestamp, $reason);
+	    sanitize_timers();
+	    save_timers();
+	    activate_next_timer();
+	    $command = "MSG " . ($channel ? "$channel $nick: " : "$nick ") . "Ajastus asetettu";
+	    print("Command:$command");
+	    $server->command($command);
 	}
     }
 }
