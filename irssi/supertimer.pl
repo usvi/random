@@ -1,6 +1,7 @@
 use strict;
 use vars qw($VERSION %IRSSI);
 use Irssi;
+use Time::Local;
 
 $VERSION = '1.0';
 %IRSSI =
@@ -255,11 +256,81 @@ sub debug_timer
 }
 
 
+sub check_for_commands
+{
+    my ($server, $msg, $nick, $mask, $channel) = @_;
+
+    #if($msg =~ /^\!mk[ ]+/ || $msg =~ /^\!ajastin[ ]+/ || $msg =~ /^\!ajastus[ ]+/)
+    if($msg =~ /^\!st[ ]+/)
+    {
+        $msg =~ s/^\![a-zA-Z]+//;
+        $msg =~s/^[ ]+//;
+
+
+        #my @cmd_args = ($nick, $server, ($channel ? $channel : 0), $msg);
+        #my $timer_result = handle_timer_command(@cmd_args);
+	#$server->command("MSG " . ($channel ? $channel . " " . $nick . ":" : $nick) . " " . $timer_result);
+        my $timestamp = 0;
+	my $reason = "";
+	my $command = "";
+	# Trying 2014-04-03 16:34:41 Reason
+	#        2014-04-03 16.34.41 Reason
+	if($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})[ ]+([0-9]{1,2})[\:\.]([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
+	{
+	    $timestamp = timelocal($6, $5, $4, $3, $2, $1);
+	    $reason = $7;
+	    $command = "add";
+	}
+	# Trying 2014-04-03 16:34 Reason
+	#        2014-04-03 16.34 Reason
+	elsif($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})[ ]+([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
+	{
+	    $timestamp = timelocal(0, $5, $4, $3, $2, $1);
+	    $reason = $6;
+	    $command = "add";
+	}
+	# Trying 2014-04-03 Reason
+	elsif($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})(.*)/)
+	{
+	    $timestamp = timelocal(0, 0, 0, $3, $2, $1);
+	    $reason = $4;
+	    $command = "add";
+	}
+	# Trying 60 Reason
+	elsif($msg =~ /([0-9]{1,4})(.*)/)
+	{
+	    $timestamp = time() + $1 * 60;
+	    $reason = $2;
+	    $command = "add";
+	}
+	elsif($msg =~ /del[ ]*/)
+	{
+	    $command = "del";
+	}
+	elsif($msg =~ /nuke[ ]*/)
+	{
+	    $command = "nuke";
+	}
+	if($command ne "")
+	{
+	    print("Command:$command; timestamp:$timestamp; reason:$reason");
+	}
+    }
+}
+
+
 
 Irssi::command_bind("stload", "load_timers");
 Irssi::command_bind("stsave", "save_timers");
 Irssi::command_bind("stprint", "list_timers");
 Irssi::command_bind("stdebug", "debug_timer");
 
+Irssi::signal_add_last("message public", "check_for_commands");
+Irssi::signal_add_last("message private", "check_for_commands");
+
 load_timers();
 activate_next_timer();
+
+
+
+
