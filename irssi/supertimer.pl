@@ -22,6 +22,7 @@ my $msg_timeout_occurred = "Aika on kulunut";
 my $msg_timer_deleted = "Viimeisin ajastus poistettu";
 my $msg_timers_nuked = "Kaikki ajastukset poistettu";
 
+
 sub load_timers
 {
     open(timer_file_handle, "<", $timer_file);
@@ -111,7 +112,6 @@ sub save_timers
 }
 
 
-
 sub list_timers
 {
     my $i = 1;
@@ -186,8 +186,6 @@ sub get_next_timeout
 }
 
 
-
-
 sub activate_next_timer
 {
     if($timer_reference != 0)
@@ -204,6 +202,7 @@ sub activate_next_timer
 	$timer_reference = Irssi::timeout_add_once(10 + ($timeout_params[4] - time()) * 1000, 'announce_timer', join(":", @timeout_params));
     }
 }
+
 
 sub announce_timer
 {
@@ -271,16 +270,6 @@ sub sanitize_timers
 	    delete($timer_list{$network})
 	}
     }
-}
-
-sub debug_timer
-{
-    $timer_list{"net"} = ();
-    $timer_list{"net"}{"private"} = ();
-    $timer_list{"net"}{"private"}{"testnick"} = ();
-    $timer_list{"net"}{"private"}{"testnick"}{time()} = (time() + 4) . ":Debugreason";
-    save_timers();
-    activate_next_timer();
 }
 
 
@@ -378,16 +367,10 @@ sub check_for_commands
 
 
 Irssi::command_bind("stload", "load_timers");
-Irssi::command_bind("stsave", "save_timers");
 Irssi::command_bind("stprint", "list_timers");
-Irssi::command_bind("stdebug", "debug_timer");
 
 Irssi::signal_add_last("message public", "check_for_commands");
 Irssi::signal_add_last("message private", "check_for_commands");
 
 load_timers();
 activate_next_timer();
-
-
-
-
