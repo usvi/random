@@ -346,6 +346,19 @@ sub check_for_commands
 	    activate_next_timer();
 	    $server->command("MSG " . ($channel ? "$channel $nick: " : "$nick ") . $msg_timer_set);
 	}
+	if($command eq "del")
+	{
+	    my @del_params = get_next_timeout($server->{tag}, $nick);
+
+	    if(@del_params > 3)
+	    {
+		remove_timer($del_params[0], $del_params[1], $del_params[2], $del_params[3]);
+		sanitize_timers();
+		save_timers();
+		activate_next_timer();
+		$server->command("MSG " . ($channel ? "$channel $nick: " : "$nick ") . "$msg_timer_deleted: " . $del_params[5]);
+	    }
+	}
     }
 }
 
