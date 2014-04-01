@@ -21,7 +21,8 @@ my $msg_timer_set = "Ajastus asetettu";
 my $msg_timeout_occurred = "Aika on kulunut";
 my $msg_timer_deleted = "Viimeisin ajastus poistettu";
 my $msg_timers_nuked = "Kaikki ajastukset poistettu";
-
+my $timer_threshold_msecs = 2144505010;
+my $housekeeping_period_msecs = 1000 * 3600 * 24;
 
 sub load_timers
 {
@@ -195,7 +196,7 @@ sub activate_next_timer
     my @timeout_params = get_next_timeout("", "");
     my $wait_time_msecs = 10 + ($timeout_params[4] - time()) * 1000;
 
-    if(@timeout_params > 0 && $wait_time < 2144505010)
+    if(@timeout_params > 0 && $wait_time_msecs < $timer_threshold_msecs)
     {
 	$timer_reference = Irssi::timeout_add_once($wait_time_msecs, 'announce_timer', join(":", @timeout_params));
     }
@@ -361,7 +362,12 @@ sub check_for_commands
     }
 }
 
+sub do_housekeeping
+{
+    activate_next_timer();
+}
 
+Irssi::timeout_add($housekeeping_period_msecs, "do_housekeeping", "");
 
 Irssi::command_bind("stload", "load_timers");
 Irssi::command_bind("stprint", "list_timers");
