@@ -17,7 +17,10 @@ $VERSION = '1.0';
 my $timer_file = Irssi::get_irssi_dir . "/supertimer.dat";
 my %timer_list = ();
 my $timer_reference = 0;
-
+my $msg_timer_set = "Ajastus asetettu";
+my $msg_timeout_occurred = "Aika on kulunut";
+my $msg_timer_deleted = "Viimeisin ajastus poistettu";
+my $msg_timer_nuked = "Kaikki ajastukset poistettu";
 
 sub load_timers
 {
@@ -205,7 +208,12 @@ sub activate_next_timer
 sub announce_timer
 {
     my ($network, $channel, $nick, $add_time, $trig_time, $reason) = split(/\:/, $_[0], 6);
-    print("Timeout occurred: $reason");
+
+    if(my $server = Irssi::server_find_tag($network))
+    {
+	$server->command("MSG " . ($channel ne "private" ? "$channel $nick: " : "$nick ") . "$msg_timeout_occurred: $reason");
+    }
+    
     remove_timer($network, $channel, $nick, $add_time);
     sanitize_timers();
     save_timers();
@@ -327,6 +335,7 @@ sub check_for_commands
 	    $command = "nuke";
 	}
 	$timestamp = ($timestamp > time() ? $timestamp : 0);
+	$reason =~ s/^\s+|\s+$//g;
 
 	if($command eq "add" && $timestamp > 0)
 	{
@@ -335,9 +344,7 @@ sub check_for_commands
 	    sanitize_timers();
 	    save_timers();
 	    activate_next_timer();
-	    $command = "MSG " . ($channel ? "$channel $nick: " : "$nick ") . "Ajastus asetettu";
-	    print("Command:$command");
-	    $server->command($command);
+	    $server->command("MSG " . ($channel ? "$channel $nick: " : "$nick ") . $msg_timer_set);
 	}
     }
 }
