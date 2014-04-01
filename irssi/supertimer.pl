@@ -198,7 +198,6 @@ sub activate_next_timer
 
     if($timeout_params[0] ne "")
     {
-	print("Next timeout in " . ($timeout_params[4] - time()));
 	$timer_reference = Irssi::timeout_add_once(10 + ($timeout_params[4] - time()) * 1000, 'announce_timer', join(":", @timeout_params));
     }
 }
