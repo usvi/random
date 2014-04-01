@@ -20,7 +20,7 @@ my $timer_reference = 0;
 my $msg_timer_set = "Ajastus asetettu";
 my $msg_timeout_occurred = "Aika on kulunut";
 my $msg_timer_deleted = "Viimeisin ajastus poistettu";
-my $msg_timer_nuked = "Kaikki ajastukset poistettu";
+my $msg_timers_nuked = "Kaikki ajastukset poistettu";
 
 sub load_timers
 {
@@ -346,7 +346,7 @@ sub check_for_commands
 	    activate_next_timer();
 	    $server->command("MSG " . ($channel ? "$channel $nick: " : "$nick ") . $msg_timer_set);
 	}
-	if($command eq "del")
+	elsif($command eq "del")
 	{
 	    my @del_params = get_next_timeout($server->{tag}, $nick);
 
@@ -358,6 +358,19 @@ sub check_for_commands
 		activate_next_timer();
 		$server->command("MSG " . ($channel ? "$channel $nick: " : "$nick ") . "$msg_timer_deleted: " . $del_params[5]);
 	    }
+	}
+	elsif($command eq "nuke")
+	{
+	    my @del_params;
+
+	    while((@del_params = get_next_timeout($server->{tag}, $nick)) > 3)
+	    {
+		remove_timer($del_params[0], $del_params[1], $del_params[2], $del_params[3]);
+	    }
+	    sanitize_timers();
+	    save_timers();
+	    activate_next_timer();
+	    $server->command("MSG " . ($channel ? "$channel $nick: " : "$nick ") . $msg_timers_nuked);
 	}
     }
 }
