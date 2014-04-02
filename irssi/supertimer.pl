@@ -22,10 +22,8 @@ my $msg_timeout_occurred = "Aika on kulunut";
 my $msg_timer_deleted = "Viimeisin ajastus poistettu";
 my $msg_timers_nuked = "Kaikki ajastukset poistettu";
 my $timer_threshold_msecs = 2144505010;
-my $housekeeping_period_msecs = 1000 * 3600 * 24;
+my $housekeeping_period_msecs = 1000 * 3600 * 1;
 
-# Bugs/features
-# Should support 01:18
 
 sub load_timers
 {
@@ -306,7 +304,7 @@ sub check_for_commands
 	#        2014-04-03 16.34.41 Reason
 	if($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})[ ]+([0-9]{1,2})[\:\.]([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
 	{
-	    if(validate_time($6, $5, $4, $3, $2, $1) != 1)
+	    if(validate_time($1, $2, $3, $4, $5, $6) != 1)
 	    {
 		return;
 	    }
@@ -318,7 +316,7 @@ sub check_for_commands
 	#        2014-04-03 16.34 Reason
 	elsif($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})[ ]+([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
 	{
-	    if(validate_time($5, $4, $3, $2, $1, 0) != 1)
+	    if(validate_time($1, $2, $3, $4, $5, 0) != 1)
 	    {
 		return;
 	    }
@@ -329,7 +327,7 @@ sub check_for_commands
 	# Trying 2014-04-03 Reason
 	elsif($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})(.*)/)
 	{
-	    if(validate_time($3, $2, $1, 0, 0, 0) != 1)
+	    if(validate_time($1, $2, $3, 0, 0, 0) != 1)
 	    {
 		return;
 	    }
