@@ -24,6 +24,9 @@ my $msg_timers_nuked = "Kaikki ajastukset poistettu";
 my $timer_threshold_msecs = 2144505010;
 my $housekeeping_period_msecs = 1000 * 3600 * 24;
 
+# Bugs/features
+# Should support 01:18
+
 sub load_timers
 {
     open(timer_file_handle, "<", $timer_file);
@@ -272,6 +275,21 @@ sub sanitize_timers
 }
 
 
+sub validate_time
+{
+    my $date_ok = 1;
+    my ($year, $month, $day, $hours, $minutes, $seconds) = @_;
+    $date_ok = (($year >= 2000 && $year <= 3000) ? $date_ok : 0);
+    $date_ok = (($month >= 1 && $month <= 12) ? $date_ok : 0);
+    $date_ok = (($day >= 1 && $day <= 31) ? $date_ok : 0);
+    $date_ok = (($hours >= 0 && $hours <= 23) ? $date_ok : 0);
+    $date_ok = (($minutes >= 0 && $minutes <= 59) ? $date_ok : 0);
+    $date_ok = (($seconds >= 0 && $seconds <= 59) ? $date_ok : 0);
+
+    return $date_ok;
+}
+
+
 sub check_for_commands
 {
     my ($server, $msg, $nick, $mask, $channel) = @_;
@@ -288,6 +306,10 @@ sub check_for_commands
 	#        2014-04-03 16.34.41 Reason
 	if($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})[ ]+([0-9]{1,2})[\:\.]([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
 	{
+	    if(validate_time($6, $5, $4, $3, $2, $1) != 1)
+	    {
+		return;
+	    }
 	    $timestamp = timelocal($6, $5, $4, $3, $2 - 1, $1);
 	    $reason = $7;
 	    $command = "add";
@@ -296,6 +318,10 @@ sub check_for_commands
 	#        2014-04-03 16.34 Reason
 	elsif($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})[ ]+([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
 	{
+	    if(validate_time($5, $4, $3, $2, $1, 0) != 1)
+	    {
+		return;
+	    }
 	    $timestamp = timelocal(0, $5, $4, $3, $2 - 1, $1);
 	    $reason = $6;
 	    $command = "add";
@@ -303,8 +329,38 @@ sub check_for_commands
 	# Trying 2014-04-03 Reason
 	elsif($msg =~ /([0-9]{4})\-([0-9]{1,2})\-([0-9]{1,2})(.*)/)
 	{
+	    if(validate_time($3, $2, $1, 0, 0, 0) != 1)
+	    {
+		return;
+	    }
 	    $timestamp = timelocal(0, 0, 0, $3, $2 - 1, $1);
 	    $reason = $4;
+	    $command = "add";
+	}
+	# Trying 16:34:41 Reason
+	#        16.34.41 Reason
+	elsif($msg =~ /([0-9]{1,2})[\:\.]([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
+	{
+	    if(validate_time(2000, 1, 1, $1, $2, $3) != 1)
+	    {
+		return;
+	    }
+	    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time());
+	    $timestamp = timelocal($3, $2, $1, $mday, $mon, $year + 1900);
+	    $reason = $4;
+	    $command = "add";
+	}
+	# Trying 16:34 Reason
+	#        16.34 Reason
+	elsif($msg =~ /([0-9]{1,2})[\:\.]([0-9]{1,2})(.*)/)
+	{
+	    if(validate_time(2000, 1, 1, $1, $2, 0) != 1)
+	    {
+		return;
+	    }
+	    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time());
+	    $timestamp = timelocal(0, $2, $1, $mday, $mon, $year + 1900);
+	    $reason = $3;
 	    $command = "add";
 	}
 	# Trying 60 Reason
@@ -364,6 +420,7 @@ sub check_for_commands
 
 sub do_housekeeping
 {
+    print("Doing housekeeping");
     activate_next_timer();
 }
 
