@@ -23,7 +23,7 @@ my $msg_timer_deleted = "Viimeisin ajastus poistettu";
 my $msg_timers_nuked = "Kaikki ajastukset poistettu";
 my $timer_threshold_msecs = 2144505010;
 my $housekeeping_period_msecs = 1000 * 3600 * 1;
-
+my $grace_period = 7;
 
 sub load_timers
 {
@@ -116,6 +116,7 @@ sub save_timers
 sub list_timers
 {
     my $i = 1;
+    print("Listing active timers:");
 
     for my $network ( keys %timer_list )
     {
@@ -196,9 +197,10 @@ sub activate_next_timer
     }
     my @timeout_params = get_next_timeout("", "");
     my $wait_time_msecs = 10 + ($timeout_params[4] - time()) * 1000;
-
-    if(@timeout_params > 0 && $wait_time_msecs < $timer_threshold_msecs)
+    # Allow a bit old timers. During grace period all have been processed.
+    if(@timeout_params > 0 && $wait_time_msecs < $timer_threshold_msecs && $wait_time_msecs > 0 - $grace_period * 1000)
     {
+	$wait_time_msecs = ($wait_time_msecs < 10 ? 10 : $wait_time_msecs);
 	$timer_reference = Irssi::timeout_add_once($wait_time_msecs, 'announce_timer', join(":", @timeout_params));
     }
 }
@@ -212,7 +214,6 @@ sub announce_timer
     {
 	$server->command("MSG " . ($channel ne "private" ? "$channel $nick: " : "$nick ") . "$msg_timeout_occurred: $reason");
     }
-    
     remove_timer($network, $channel, $nick, $add_time);
     sanitize_timers();
     save_timers();
@@ -292,8 +293,7 @@ sub check_for_commands
 {
     my ($server, $msg, $nick, $mask, $channel) = @_;
 
-    #if($msg =~ /^\!mk[ ]+/ || $msg =~ /^\!ajastin[ ]+/ || $msg =~ /^\!ajastus[ ]+/)
-    if($msg =~ /^\!st[ ]+/)
+    if($msg =~ /^\!mk[ ]+/ || $msg =~ /^\!ajastin[ ]+/ || $msg =~ /^\!ajastus[ ]+/)
     {
         $msg =~ s/^\![a-zA-Z]+//;
         $msg =~s/^[ ]+//;
@@ -380,7 +380,6 @@ sub check_for_commands
 
 	if($command eq "add" && ($timestamp > time()))
 	{
-	    #my ($network, $channel, $nick, $add_time, $trig_time, $reason) = @_;
 	    add_timer($server->{tag}, ($channel ? $channel : "private"), $nick, time(), $timestamp, $reason);
 	    sanitize_timers();
 	    save_timers();
@@ -403,22 +402,27 @@ sub check_for_commands
 	elsif($command eq "nuke")
 	{
 	    my @del_params;
+	    my $timers_deleted = 0;
 
 	    while((@del_params = get_next_timeout($server->{tag}, $nick)) > 3)
 	    {
 		remove_timer($del_params[0], $del_params[1], $del_params[2], $del_params[3]);
+		$timers_deleted = 1;
 	    }
 	    sanitize_timers();
 	    save_timers();
 	    activate_next_timer();
-	    $server->command("MSG " . ($channel ? "$channel $nick: " : "$nick ") . $msg_timers_nuked);
+	    
+	    if($timers_deleted == 1)
+	    {
+		$server->command("MSG " . ($channel ? "$channel $nick: " : "$nick ") . $msg_timers_nuked);
+	    }
 	}
     }
 }
 
 sub do_housekeeping
 {
-    print("Doing housekeeping");
     activate_next_timer();
 }
 
