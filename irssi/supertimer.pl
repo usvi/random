@@ -197,7 +197,7 @@ sub activate_next_timer
     }
     my @timeout_params = get_next_timeout("", "");
     my $wait_time_msecs = 10 + ($timeout_params[4] - time()) * 1000;
-    # Allow a bit old timers. During grace period all have been processed.
+    # Allow a bit old timers. During grace period all of them will be processed.
     if(@timeout_params > 0 && $wait_time_msecs < $timer_threshold_msecs && $wait_time_msecs > 0 - $grace_period * 1000)
     {
 	$wait_time_msecs = ($wait_time_msecs < 10 ? 10 : $wait_time_msecs);
