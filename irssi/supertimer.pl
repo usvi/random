@@ -143,7 +143,7 @@ sub list_timers
 
 #If called with params "network, nick", searches the latest addition by the user
 #If called without params, searches the next timer that will trigger
-sub get_next_timeout
+sub get_timeout
 {
     my @input_params = @_;
     my $next_time = 0;
@@ -195,7 +195,7 @@ sub activate_next_timer
 	Irssi::timeout_remove($timer_reference);
 	$timer_reference = 0;
     }
-    my @timeout_params = get_next_timeout("", "");
+    my @timeout_params = get_timeout("", "");
     my $wait_time_msecs = 10 + ($timeout_params[4] - time()) * 1000;
     # Allow a bit old timers. During grace period all of them will be processed.
     if(@timeout_params > 0 && $wait_time_msecs < $timer_threshold_msecs && $wait_time_msecs > 0 - $grace_period * 1000)
@@ -388,7 +388,7 @@ sub check_for_commands
 	}
 	elsif($command eq "del")
 	{
-	    my @del_params = get_next_timeout($server->{tag}, $nick);
+	    my @del_params = get_timeout($server->{tag}, $nick);
 
 	    if(@del_params > 3)
 	    {
@@ -404,7 +404,7 @@ sub check_for_commands
 	    my @del_params;
 	    my $timers_deleted = 0;
 
-	    while((@del_params = get_next_timeout($server->{tag}, $nick)) > 3)
+	    while((@del_params = get_timeout($server->{tag}, $nick)) > 3)
 	    {
 		remove_timer($del_params[0], $del_params[1], $del_params[2], $del_params[3]);
 		$timers_deleted = 1;
