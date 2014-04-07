@@ -171,7 +171,7 @@ sub get_timeout
 			    }
 			}
 			# Next search, searching for next trigger time
-			else
+			elsif(@input_params != 2)
 			{
 			    if($next_time == 0 || ($1 + 0) < $next_time)
 			    {
