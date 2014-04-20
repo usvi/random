@@ -345,6 +345,13 @@ sub check_for_commands
 	    }
 	    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time());
 	    $timestamp = timelocal($3, $2, $1, $mday, $mon, $year + 1900);
+	    # Time is in the past which may imply the user wanted actually next day.
+	    # Structure next day time as timestamp.
+	    if($timestamp <= time())
+	    {
+		($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time() + 3600 * 24);
+		$timestamp = timelocal($3, $2, $1, $mday, $mon, $year + 1900);
+	    }
 	    $reason = $4;
 	    $command = "add";
 	}
@@ -358,6 +365,13 @@ sub check_for_commands
 	    }
 	    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time());
 	    $timestamp = timelocal(0, $2, $1, $mday, $mon, $year + 1900);
+	    # Time is in the past which may imply the user wanted actually next day.
+	    # Structure next day time as timestamp.
+	    if($timestamp <= time())
+	    {
+		($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time() + 3600 * 24);
+		$timestamp = timelocal(0, $2, $1, $mday, $mon, $year + 1900);
+	    }
 	    $reason = $3;
 	    $command = "add";
 	}
