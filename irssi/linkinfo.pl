@@ -30,7 +30,7 @@ sub get_title
 		my ($title) = $html =~ m/<title>([a-zA-Z\/\s][^>]+)<\/title>/gsi;
 		$title =~ s/\s+/ /g;
 
-		return $title;
+		return "Title: " . $title;
 	}
 }
 
