@@ -17,32 +17,29 @@ $VERSION = '0.1';
  changed     => 'Tue Nov 18 13:22:38 EET 2014'
 );
 
-my $ok_chans .= " #otaniemi #vimpeli ";
+my $ok_chans .= " #otaniemi #vimpeli #test3 ";
 
 sub get_title
 {
-	my $title = "";
-	my $url = shift();
+	my $url = $_[0];
 	my $response = $ua->head($url);
 
 	if($response->is_success() && ($response->content_type() eq "text/html"))
 	{
 		my $html = $ua->get($url)->content();
-		$title = $html =~ m/<title>([a-zA-Z\/][^>]+)<\/title>/si;
-		
-		if(length($title) > 72)
-		{
-			$title = substr($title, 0, 72);
-		}
+		my ($title) = $html =~ m/<title>([a-zA-Z\/\s][^>]+)<\/title>/gsi;
+		$title =~ s/\s+/ /g;
+
+		return $title;
 	}
-	return $title;
 }
 
 sub check_for_urls
 {
-    my $temp_channel = lc($_[4]);
-    my $temp_message = $_[1];
-    my $temp_nick = $_[2];
+	my $temp_server = $_[0];
+	my $temp_message = $_[1];
+	my $temp_nick = $_[2];
+	my $temp_channel = lc($_[4]);
 
 	if(index(" " . lc($ok_chans) . " ", " " . lc($temp_channel) ." ") != -1)
 	{
@@ -58,7 +55,7 @@ sub check_for_urls
 				{
 					$return_string .= " | ";
 				}
-				$return_string .= get_title()
+				$return_string .= get_title($_)
 			}
 		}
 		if(length($return_string) > 0)
