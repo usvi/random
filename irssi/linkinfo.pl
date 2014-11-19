@@ -27,7 +27,6 @@ sub get_title
 	if($response->is_success() && ($response->content_type() eq "text/html"))
 	{
 		my $html = $ua->get($url)->content();
-		#my ($title) = $html =~ m/<title>([a-zA-Z\/\s][^>]+)<\/title>/gsi;
 		my ($title) = $html =~ m/<title>([^>]+)<\/title>/gsi;
 		$title =~ s/\s+/ /g;
 
