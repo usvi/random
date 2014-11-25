@@ -24,13 +24,21 @@ sub get_title
 	my $url = $_[0];
 	my $response = $ua->head($url);
 
-	if($response->is_success() && ($response->content_type() eq "text/html"))
+	if($response->is_success() && !($response->content_type() eq "text/html"))
 	{
-		my $html = $ua->get($url)->content();
-		my ($title) = $html =~ m/<title>([^>]+)<\/title>/gsi;
-		$title =~ s/\s+/ /g;
+		return "";
+	}
+	my $html = $ua->get($url)->content();
+	my ($title) = $html =~ m/<title>([^>]+)<\/title>/gsi;
+	$title =~ s/\s+/ /g;
 
+	if(length($title) > 0)
+	{
 		return "Title: " . $title;
+	}
+	else
+	{
+		return "";
 	}
 }
 
