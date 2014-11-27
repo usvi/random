@@ -2,6 +2,8 @@ use Irssi;
 use strict;
 use vars qw($VERSION %IRSSI);
 use LWP::UserAgent;
+use HTML::Entities;
+
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
 
@@ -30,6 +32,7 @@ sub get_title
 	}
 	my $html = $ua->get($url)->content();
 	my ($title) = $html =~ m/<title>([^>]+)<\/title>/gsi;
+	$title = decode_entities($title);
 	$title =~ s/\s+/ /g;
 
 	if(length($title) > 0)
