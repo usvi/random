@@ -6,7 +6,7 @@ use HTML::Entities;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
-
+$ua->agent("Mozilla/5.0 (X11; Linux x86_64; rv:29.0) Gecko/20100101 Firefox/29.0 SeaMonkey/2.26.1");
 
 $VERSION = '0.1';
 %IRSSI =
