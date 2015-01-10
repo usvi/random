@@ -3,6 +3,8 @@ use strict;
 use vars qw($VERSION %IRSSI);
 use LWP::UserAgent;
 use HTML::Entities;
+use utf8;
+use Encode;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
@@ -66,7 +68,16 @@ sub check_for_urls
 				{
 					$return_string .= " | ";
 				}
-				$return_string .= get_title($_)
+				my $temp_title = get_title($_);
+
+				if(utf8::is_utf8($temp_title))
+				{
+					#$return_string .= "UTF8";
+					$temp_title =~ s/—/\-/g;
+					$temp_title = encode("iso-8859-1", $temp_title);
+				}
+
+				$return_string .= $temp_title;
 			}
 		}
 		if(length($return_string) > 0)
