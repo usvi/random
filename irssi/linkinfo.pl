@@ -21,7 +21,7 @@ $VERSION = '0.1';
  changed     => 'Tue Nov 18 13:22:38 EET 2014'
 );
 
-my $ok_chans .= " #otaniemi/IRCnet #vimpeli/IRCnet #piraattipuolue/PirateIRC #toiminta/PirateIRC ";
+my $ok_chans .= " #otaniemi/IRCnet #vimpeli/IRCnet #piraattipuolue/PirateIRC #toiminta/PirateIRC #otaposse/IRCnet ";
 
 sub get_title
 {
