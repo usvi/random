@@ -1,4 +1,1 @@
-scripts
-=======
-
-Various scripts, mostly for Linux environments
+Bits and pieces of random scripts and programs.
