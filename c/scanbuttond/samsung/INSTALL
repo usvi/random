@@ -1,0 +1,17 @@
+Installation is 2-fold:
+
+1st, install scanbuttond via apt (apt-get install scanbuttond )
+
+2nd, compile and install the samsung3200 module:
+cd /tmp/
+rm -rf scanbuttond*
+apt-get source scanbuttond
+cd scanbuttond-0.2.3.cvs20090713
+patch -p1 < /tmp/samsung3200.patch
+autoreconf --install
+./configure --prefix=/tmp/scan
+make
+make install
+mv /tmp/scan/lib/libscanbtnd-backend_samsung3200.so* /usr/lib/scanbuttond/
+cd ..
+echo "libscanbtnd-backend_samsung3200" >> /etc/scanbuttond/meta.conf
