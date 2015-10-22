@@ -100,7 +100,7 @@ sub scan_timer_interrupt
     }
     my $temp_nick = pop(@scan_remaining_nicks);
     $scan_last_nick = $temp_nick->{nick};
-    $scan_lurk_channel->command("deop " . $temp_nick->{nick});
+    $scan_lurk_channel->command("devoice " . $temp_nick->{nick});
 }
 
 sub check_return_msg
