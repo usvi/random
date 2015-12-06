@@ -21,7 +21,7 @@ $VERSION = '0.1';
  changed     => 'Tue Nov 18 13:22:38 EET 2014'
 );
 
-my $ok_chans .= " #otaniemi/IRCnet #vimpeli/IRCnet #piraattipuolue/PirateIRC #toiminta/PirateIRC #otaposse/IRCnet ";
+my $no_chans .= " #piraattipuolue/IRCnet ";
 
 sub get_title
 {
@@ -54,7 +54,7 @@ sub check_for_urls
 	my $temp_nick = $_[2];
 	my $temp_channel = lc($_[4]);
 
-	if(index(" " . lc($ok_chans) . " ", " " . lc($temp_channel) . "/" . lc($temp_server->{tag}) ." ") != -1)
+	if(!(index(" " . lc($no_chans) . " ", " " . lc($temp_channel) . "/" . lc($temp_server->{tag}) ." ") != -1))
 	{
 		#my @url_tokens = ($temp_message =~ m/([k]{0,1}http[s]{0,1}\:\/\/.*?[^( )\t]*).*?/ig);
 		my @url_tokens = ($temp_message =~ m/(http[s]{0,1}\:\/\/.*?[^( )\t]*).*?/ig);
