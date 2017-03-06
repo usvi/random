@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+PATH=/sbin:/usr/local/bin:$PATH
+
+#echo $reason >> /tmp/reasons
+
+#/usr/local/sbin/update_gw_dy_address.sh
+
+case $reason in
+    BOUND|RENEW|REBIND|REBOOT|TIMEOUT)
+        # eth0 is the default route
+        if [ "$interface" = "eth1" ]; then
+            unset new_routers
+        fi
+        if [ "$interface" = "eth2" ]; then
+            unset new_routers
+        fi
+        if [ "$interface" = "eth3" ]; then
+            # LAN IF, shouldn't happen
+            unset new_routers
+        fi
+        ;;
+esac
