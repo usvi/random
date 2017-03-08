@@ -1,6 +1,7 @@
 #!/bin/bash
 INTERFACE=$1
-GATEWAY=$2
+
+ROUTE_INFO_PATH=/var/lib/routes
 
 if [ -z $INTERFACE ];
 then
@@ -8,9 +9,11 @@ then
     exit 1
 fi
 
+
+GATEWAY=$(head -n 1 $ROUTE_INFO_PATH/$INTERFACE.dat)
 if [ -z $GATEWAY ];
 then
-    echo "No gateway given!"
+    echo "Could not get gateway address!"
     exit 1
 fi
 
@@ -51,4 +54,3 @@ ip route add $NETWORK/$NETMASK dev $INTERFACE src $IPADDR table $INTERFACE
 ip route add default via $GATEWAY dev $INTERFACE table $INTERFACE
 ip rule add from $IPADDR/32 table $INTERFACE
 ip rule add to $IPADDR/32 table $INTERFACE
-

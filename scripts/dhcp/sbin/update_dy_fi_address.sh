@@ -7,6 +7,8 @@ DYFI_ADDRESS_DATA_DIR=/var/lib/dyfi
 UPDATE=no
 TIME_TRESHOLD=432000 #432000 = 5 days
 
+mkdir -p $DYFI_ADDRESS_DATA_DIR
+
 # 1. If old dy.fi address is different than current (and current exists), update with current always
 # 2. If adresses are the same, update only if enough time has passed
 
@@ -31,8 +33,8 @@ else
     TIME_DIFF=$((`date +%s` - `stat -c %Y $DYFI_ADDRESS_DATA_DIR/$INTERFACE.dat`))
 
     if [ $TIME_DIFF -gt $TIME_TRESHOLD ]; then
-        # Threshold too much -> update!
-        UPDATE=yes
+	# Threshold too much -> update!
+	UPDATE=yes
     fi
 fi
 

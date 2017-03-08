@@ -1,23 +1,25 @@
 #!/bin/bash
 #
 PATH=/sbin:/usr/local/bin:$PATH
+ROUTE_INFO_PATH=/var/lib/routes
 
-#echo $reason >> /tmp/reasons
-
-#/usr/local/sbin/update_gw_dy_address.sh
+mkdir -p $ROUTE_INFO_PATH
 
 case $reason in
     BOUND|RENEW|REBIND|REBOOT|TIMEOUT)
-        # eth0 is the default route
-        if [ "$interface" = "eth1" ]; then
-            unset new_routers
-        fi
-        if [ "$interface" = "eth2" ]; then
-            unset new_routers
-        fi
-        if [ "$interface" = "eth3" ]; then
-            # LAN IF, shouldn't happen
-            unset new_routers
-        fi
-        ;;
+	# Store new router information
+	echo "$new_routers" > $ROUTE_INFO_PATH/$interface.dat
+	
+	# eth0 is the default route
+	if [ "$interface" = "eth1" ]; then
+	    unset new_routers
+	fi
+	if [ "$interface" = "eth2" ]; then
+	    unset new_routers
+	fi
+	if [ "$interface" = "eth3" ]; then
+	    # LAN IF, shouldn't happen
+	    unset new_routers
+	fi
+	;;
 esac
