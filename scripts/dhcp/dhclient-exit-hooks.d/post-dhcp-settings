@@ -1,22 +1,79 @@
 #!/bin/bash
 #
 PATH=/sbin:/usr/local/bin:$PATH
+ROUTE_INFO_PATH=/var/lib/routes
+TIME_TRESHOLD=10
 
+# Only update if
+# 1. Bound (update everything)
+# 2. Otherwise if old ip address is different than current or
+#    old routers is different than current
+
+# Get new routers from file, if time difference small enough
+new_file_routers=""
+TIME_DIFF=$((`date +%s` - `stat -c %Y $ROUTE_INFO_PATH/$interface.dat`))
+
+if [ $TIME_DIFF -lt $TIME_TRESHOLD ];
+then
+    new_file_routers=$(head -n 1 $ROUTE_INFO_PATH/$interface.dat)
+fi
 
 case $reason in
     BOUND|RENEW|REBIND|REBOOT|TIMEOUT)
-
-	# Usucal case: First ones are BOUND, rest RENEW
 	
-	if [ "$interface" = "eth0" ]; then
+	# Usual case: First ones are BOUND, rest RENEW
+	
+	if [ "$interface" = "eth0" ];
+	then
+	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
+	    then
+		/usr/local/sbin/setup_vpn.sh
+		/usr/local/sbin/firewall_vpn.sh
+		logger "$interface ($reason): Settings: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+	    elif [ $old_ip_address != $new_ip_address -o $old_routers != $new_file_routers ];
+	    then
+		/usr/local/sbin/setup_vpn.sh
+		/usr/local/sbin/firewall_vpn.sh
+		logger "$interface ($reason): Changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+	    else
+		logger "$interface ($reason): No changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+	    fi
 	    /usr/local/sbin/update_dy_fi_address.sh $interface gw.asuka.dy.fi
 	fi
-	if [ "$interface" = "eth1" ]; then
-	    /usr/local/sbin/policy_route_dhcp.sh $interface
+	if [ "$interface" = "eth1" ];
+	then
+	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
+	    then
+		/usr/local/sbin/policy_route_dhcp.sh $interface
+		/usr/local/sbin/firewall_shell.sh
+		logger "$interface ($reason): Settings: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+	    elif [ $old_ip_address != $new_ip_address -o $old_routers != $new_file_routers ];
+	    then
+		/usr/local/sbin/policy_route_dhcp.sh $interface
+		/usr/local/sbin/firewall_shell.sh
+		logger "$interface ($reason): Changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+	    else
+		logger "$interface ($reason): No changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+	    fi
 	    /usr/local/sbin/update_dy_fi_address.sh $interface shell.asuka.dy.fi
 	fi
-	if [ "$interface" = "eth2" ]; then
-	    /usr/local/sbin/policy_route_dhcp.sh $interface
+	
+	if [ "$interface" = "eth2" ];
+	then
+
+	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
+	    then
+		/usr/local/sbin/policy_route_dhcp.sh $interface
+		/usr/local/sbin/firewall_asuka.sh
+		logger "$interface ($reason): Settings: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+	    elif [ $old_ip_address != $new_ip_address -o $old_routers != $new_file_routers ];
+	    then
+		/usr/local/sbin/policy_route_dhcp.sh $interface
+		/usr/local/sbin/firewall_asuka.sh
+		logger "$interface ($reason): Changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+	    else
+		logger "$interface ($reason): No changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+	    fi
 	    /usr/local/sbin/update_dy_fi_address.sh $interface asuka.dy.fi
 	fi
 	;;

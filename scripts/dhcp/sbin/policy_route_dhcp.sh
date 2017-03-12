@@ -1,7 +1,10 @@
 #!/bin/bash
 INTERFACE=$1
 
+. /usr/local/sbin/firewall_defs.sh
+
 ROUTE_INFO_PATH=/var/lib/routes
+
 
 if [ -z $INTERFACE ];
 then
@@ -49,8 +52,36 @@ while ip rule show | grep "lookup $INTERFACE" &>/dev/null; do
     ip rule del table $INTERFACE
 done
 
+
 # Set new policy routing
 ip route add $NETWORK/$NETMASK dev $INTERFACE src $IPADDR table $INTERFACE
 ip route add default via $GATEWAY dev $INTERFACE table $INTERFACE
 ip rule add from $IPADDR/32 table $INTERFACE
 ip rule add to $IPADDR/32 table $INTERFACE
+
+# Set additional lookups
+# For shell
+if [ $INTERFACE = $IF_SHELL ];
+then
+    # Remove rules for OpenVPN
+    while ip rule show | grep "$ADDR_PRIV_SHELL.*$RANGE_OPENVPN" &>/dev/null; do
+	ip rule delete from $ADDR_PRIV_SHELL to $RANGE_OPENVPN
+    done
+    # Normally use specific lookup table
+    ip rule add from $ADDR_PRIV_SHELL lookup $IF_SHELL
+    # But use main lookup table for OpenVPN stuff
+    ip rule add from $ADDR_PRIV_SHELL to $RANGE_OPENVPN lookup main
+fi
+# For webserver
+if [ $INTERFACE = $IF_ASUKA ];
+then
+    # Remove rules for OpenVPN
+    while ip rule show | grep "$ADDR_PRIV_ASUKA.*$RANGE_OPENVPN" &>/dev/null; do
+	ip rule delete from $ADDR_PRIV_ASUKA to $RANGE_OPENVPN
+    done
+    # Normally use specific lookup table
+    ip rule add from $ADDR_PRIV_ASUKA lookup $IF_ASUKA
+    # But use main lookup table for OpenVPN stuff
+    ip rule add from $ADDR_PRIV_ASUKA to $RANGE_OPENVPN lookup main
+fi
+
