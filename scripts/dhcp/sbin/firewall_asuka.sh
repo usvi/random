@@ -9,6 +9,7 @@ reset_fw_rules_by_tag $FIREWALL_TAG_ASUKA
 
 
 # Www redirections
+/sbin/iptables -A INPUT -i $IF_ASUKA -d $ADDR_PUB_ASUKA -m state --state RELATED,ESTABLISHED -j ACCEPT -m comment --comment "$FIREWALL_TAG_ASUKA"
 /sbin/iptables -t nat -A PREROUTING -i $IF_ASUKA -p tcp -d $ADDR_PUB_ASUKA --dport 80 -j DNAT --to-destination $ADDR_PRIV_ASUKA:80 -m comment --comment "$FIREWALL_TAG_ASUKA"
 /sbin/iptables -t nat -A PREROUTING -s $RANGE_LAN -d $ADDR_PUB_ASUKA -j DNAT --to-destination $ADDR_PRIV_ASUKA -m comment --comment "$FIREWALL_TAG_ASUKA"
 /sbin/iptables -t nat -A POSTROUTING -s $RANGE_LAN -d $ADDR_PRIV_ASUKA -j SNAT --to-source $ADDR_PRIV_GW -m comment --comment "$FIREWALL_TAG_ASUKA"
