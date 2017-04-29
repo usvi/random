@@ -1,0 +1,77 @@
+#!/bin/sh
+
+set -eu
+
+pow () {
+    local x y res i
+    x=$1
+    y=$2
+    res=1
+    i=1
+    while [ $i -le $y ]; do
+        res=$(( res * x ))
+        i=$(( i + 1 ))
+    done
+    echo $res
+}
+
+# Helper funcion to dotted_decimal_to_numeric
+spaced_decimal_to_numeric () {
+        local addr=$((16777216 * $1 + 65536 * $2 + 256 * $3 + $4))
+        echo $addr
+}
+
+numeric_to_dotted_decimal () {
+        local group1=$(($1 / 16777216))
+        local remainder1=$(($1 - ($group1 * 16777216)))
+        local group2=$(($remainder1 / 65536))
+        local remainder2=$(($remainder1 - ($group2 * 65536)))
+        local group3=$(($remainder2 / 256))
+        local group4=$(($remainder2 - ($group3 * 256)))
+        echo "$group1.$group2.$group3.$group4"
+}
+
+tcpscan_worker () {
+	local address=$(numeric_to_dotted_decimal $1)
+        local nc_status=$(nc $address $2 </dev/null 2>&1 >/dev/null; echo $?)
+        if [ "$nc_status" != "0" ]; then
+                return 1
+        fi
+        echo $address
+        return 0
+}
+
+tcpscan () {
+        local spaced_addr="$(echo $1 | cut -d'/' -f1 | cut -d. -f1-4 | tr . ' ')"
+	local port=$2
+        local numeric_addr=$(spaced_decimal_to_numeric $spaced_addr)
+        local mask=$(echo $1 | cut -d'/' -f2)
+        local net_bits=$((32 - $mask))
+        local numeric_mask=$(pow 2 $net_bits)
+        local network_addr=$(($numeric_addr / $numeric_mask * $numeric_mask))
+        local first_addr=$(($network_addr + 1))
+        local last_addr=$(($network_addr + $numeric_mask - 2))
+        local first_addr_text=$(numeric_to_dotted_decimal $first_addr)
+        local last_addr_text=$(numeric_to_dotted_decimal $last_addr)
+        >&2 echo "Scanning range ${first_addr_text} - ${last_addr_text}"
+        for ip_addr in $(seq $first_addr $last_addr); do
+        	tcpscan_worker "$ip_addr" "$port" &
+        done
+	sleep 1
+	kill -9 $(pgrep -P $$) 2>/dev/null >/dev/null
+}
+
+# Require interface name
+if [ -z ${1+0} ] || [ -z ${2+0} ]; then
+        echo "usage: $0 interface_name port"
+        exit 0
+fi
+
+# The space in grep is important. We only want IPv4.
+addr=$(ip addr show dev $1 | grep -m 1 "inet " | awk '{print $2}')
+if [ "$addr" = "" ]; then
+        >&2 echo "Error: iface $1 has no usable addresses"
+        exit 1
+fi
+
+tcpscan $addr $2
