@@ -48,7 +48,7 @@ int main()
     {
       i_device_found = 1;
       
-      if((i_retval = libusb_open(px_dev_list[i] , &px_dev_handle) != 0))
+      if((i_retval = libusb_open(px_dev_list[i] , &px_dev_handle)) != 0)
       {
 	if(i_retval == LIBUSB_ERROR_NO_MEM)
 	{
