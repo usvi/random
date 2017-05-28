@@ -56,7 +56,7 @@ int main()
 	}
 	else if(i_retval == LIBUSB_ERROR_ACCESS)
 	{
-	  printf("ERROR: Insufficiend permissions accessing device\n");
+	  printf("ERROR: Insufficient permissions accessing device\n");
 	}
 	else if(i_retval == LIBUSB_ERROR_NO_DEVICE)
 	{
