@@ -21,7 +21,7 @@ $VERSION = '0.1';
  changed     => 'Tue Nov 18 13:22:38 EET 2014'
 );
 
-my $no_chans .= " #piraattipuolue/IRCnet ";
+my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
 
 sub get_title
 {
@@ -33,10 +33,11 @@ sub get_title
 		return "";
 	}
 	my $html = $ua->get($url)->content();
-	my ($title) = $html =~ m/<title>([^>]+)<\/title>/gsi;
+	my ($title) = $html =~ m/<\s*title\s*>([^>]+)<\s*\/\s*title\s*>/gsi;
 	$title = decode_entities($title);
 	$title =~ s/\s+/ /g;
-
+	$title =~ s/^\s+|\s+$//g;
+	
 	if(length($title) > 0)
 	{
 		return "Title: " . $title;
