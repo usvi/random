@@ -34,7 +34,7 @@ int main()
   
   if(libusb_init(&px_usb_ctx) != 0)
   {
-    printf("Failed to initialize libusb, exiting");
+    printf("ERROR: Failed to initialize libusb, exiting");
 
     return i_status;
   }
@@ -102,7 +102,7 @@ int main()
   if(!i_device_found)
   {
     i_status = 1;
-    printf("Unable to find suiteble Samsung device\n");
+    printf("ERROR: Unable to find suiteble Samsung device\n");
   }
   libusb_free_device_list(px_dev_list, 1);
   libusb_exit(px_usb_ctx);
