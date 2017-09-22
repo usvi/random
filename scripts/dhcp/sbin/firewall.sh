@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# This script is run from rc.local (and only once)
+
 . /usr/local/sbin/firewall_defs.sh
 
 #Flush chains
