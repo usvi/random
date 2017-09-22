@@ -38,8 +38,6 @@ else
     fi
 fi
 
-#curl --interface $INTERFACE -D - --user $DYFI_CREDENTIALS https://www.dy.fi/nic/update?hostname=$HOSTNAME
-#echo curl --interface $INTERFACE -D - --user $DYFI_CREDENTIALS https://www.dy.fi/nic/update?hostname=$HOSTNAME
 
 if [ $UPDATE = "yes" ]; then
 
