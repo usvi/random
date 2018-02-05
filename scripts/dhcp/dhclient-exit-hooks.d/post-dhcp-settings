@@ -3,6 +3,10 @@
 PATH=/sbin:/usr/local/bin:$PATH
 ROUTE_INFO_PATH=/var/lib/routes
 TIME_TRESHOLD=10
+ETH0_DY_NAME=gw.asuka.dy.fi
+ETH1_DY_NAME=shell.asuka.dy.fi
+ETH2_DY_NAME=asuka.dy.fi
+
 
 # Only update if
 # 1. Bound (update everything)
@@ -38,7 +42,7 @@ case $reason in
 	    else
 		logger "$interface ($reason): No changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    fi
-	    /usr/local/sbin/update_dy_fi_address.sh $interface gw.asuka.dy.fi
+	    /usr/local/sbin/update_dy_fi_address.sh $interface $ETH0_DY_NAME
 	fi
 	if [ "$interface" = "eth1" ];
 	then
@@ -55,7 +59,7 @@ case $reason in
 	    else
 		logger "$interface ($reason): No changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    fi
-	    /usr/local/sbin/update_dy_fi_address.sh $interface shell.asuka.dy.fi
+	    /usr/local/sbin/update_dy_fi_address.sh $interface $ETH1_DY_NAME
 	fi
 	
 	if [ "$interface" = "eth2" ];
@@ -74,7 +78,7 @@ case $reason in
 	    else
 		logger "$interface ($reason): No changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    fi
-	    /usr/local/sbin/update_dy_fi_address.sh $interface asuka.dy.fi
+	    /usr/local/sbin/update_dy_fi_address.sh $interface $ETH2_DY_NAME
 	fi
 	;;
 esac
