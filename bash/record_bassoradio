@@ -9,7 +9,7 @@
 # -f <output file>
 
 
-BASSO_URL=http://stream.basso.fi:8000/stream
+BASSO_URL="http://stream.basso.fi:8000/stream"
 
 TIME_S=0
 SHOW=""
@@ -22,7 +22,7 @@ function print_help()
     echo ""
     echo "Use: $0  -t <number of seconds to capture at least>  -s <show name>  -f <output file>"
     echo ""
-    echo "Note: -s parameter needs to be at least 1"
+    echo "Note: -t parameter needs to be at least 1"
     echo ""
 }
 
