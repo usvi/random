@@ -1,0 +1,102 @@
+#!/bin/bash
+
+
+# Downloads Finnish Bassoradio stream to file.
+# Requires: wget, mp3val, mp3info
+# Parameters:
+# -t <number of seconds to capture at least> (must be at least 1)
+# -s <show name>
+# -f <output file>
+
+
+BASSO_URL=http://stream.basso.fi:8000/stream
+
+TIME_S=0
+SHOW=""
+FILENAME=""
+
+
+function print_help()
+{
+    echo "?SYNTAX ERROR"
+    echo ""
+    echo "Use: $0  -t <number of seconds to capture at least>  -s <show name>  -f <output file>"
+    echo ""
+    echo "Note: -s parameter needs to be at least 1"
+    echo ""
+}
+
+RECORD_TIME="`date '+%Y-%m-%d'`"
+RECORD_YEAR="`date '+%Y'`"
+
+
+while getopts ":t:s:f:" OPT;
+do
+    case $OPT in
+	t)
+	    TIME_S=$OPTARG
+	    ;;
+	s)
+	    SHOW=$OPTARG
+	    ;;
+	f)
+	    FILENAME=$OPTARG
+	    ;;
+       \?)
+	    print_help
+	    exit 1
+	    ;;
+	:)
+	    print_help
+	    exit 1
+	    ;;
+    esac
+done
+
+
+if [[ -z $SHOW ]] || ! [[ $TIME_S =~ ^[0-9]+$ ]] || [[ $TIME_S -lt 1 ]] || [[ -z $FILENAME ]];
+then
+    print_help
+    exit 1
+fi
+
+DIRNAME="`dirname $FILENAME`"
+
+if [[ -z $DIRNAME ]];
+then
+    DIRNAME=.
+fi
+
+if ! [[ -w $DIRNAME ]];
+then
+    echo "ERROR: Output file not writeable!"
+    exit 1
+fi
+
+if [[ -d $FILENAME ]];
+then
+    echo "ERROR: Output file is actually a directory!"
+    exit 1
+fi
+
+echo "Recording show $SHOW for $TIME_S seconds to file $FILENAME "
+
+
+wget $BASSO_URL -O $FILENAME &>/dev/null &
+WGET_PID=$!
+echo "Backgrounding download for $TIME_S seconds"
+sleep $TIME_S
+kill -KILL $WGET_PID &>/dev/null
+
+# Stream is ready, now fix it
+echo "Postprocessing file $FILENAME"
+mp3val -f -nb $FILENAME &>/dev/null
+
+# Add tags
+echo "Adding tags"
+mp3info -t "$SHOW $RECORD_TIME" -y "$RECORD_YEAR" -l "Bassoradio" $FILENAME
+
+
+
+echo "All done!"
+exit 0
