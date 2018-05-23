@@ -4,6 +4,7 @@
 
 ADDR_PUB_ASUKA=`/sbin/ifconfig $IF_ASUKA | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
 FIREWALL_TAG_ASUKA="firewall_asuka"
+ADDR_PUB_GW=`/sbin/ifconfig $IF_GW | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
 
 reset_fw_rules_by_tag $FIREWALL_TAG_ASUKA
 

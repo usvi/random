@@ -4,6 +4,7 @@
 
 ADDR_PUB_SHELL=`/sbin/ifconfig $IF_SHELL | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
 FIREWALL_TAG_SHELL="firewall_shell"
+ADDR_PUB_GW=`/sbin/ifconfig $IF_GW | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
 
 reset_fw_rules_by_tag $FIREWALL_TAG_SHELL
 
