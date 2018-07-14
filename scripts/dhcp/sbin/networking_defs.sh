@@ -62,6 +62,20 @@ drop_lock ()
 }
 
 
+if_has_ip ()
+{
+    INTERFACE=$1
+    TEST_IP=`/sbin/ifconfig $INTERFACE | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
+
+    if [ -z $TEST_IP ];
+    then
+	echo "0"
+    else
+	echo "1"
+    fi
+}
+
+
 reset_fw_rules_by_tag ()
 {
     if [ -z $1 ];

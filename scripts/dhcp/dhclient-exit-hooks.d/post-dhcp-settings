@@ -39,14 +39,16 @@ case $reason in
 	then
 	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
 	    then
+		logger "$interface ($reason): Settings: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+		sync
 		/usr/local/sbin/setup_vpn.sh
 		/usr/local/sbin/firewall_vpn.sh
-		logger "$interface ($reason): Settings: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    elif [ $old_ip_address != $new_ip_address -o $old_routers != $new_file_routers ];
 	    then
+		logger "$interface ($reason): Changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+		sync
 		/usr/local/sbin/setup_vpn.sh
 		/usr/local/sbin/firewall_vpn.sh
-		logger "$interface ($reason): Changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    else
 		logger "$interface ($reason): No changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    fi
@@ -56,14 +58,16 @@ case $reason in
 	then
 	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
 	    then
+		logger "$interface ($reason): Settings: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+		sync
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_shell.sh
-		logger "$interface ($reason): Settings: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    elif [ $old_ip_address != $new_ip_address -o $old_routers != $new_file_routers ];
 	    then
+		logger "$interface ($reason): Changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+		sync
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_shell.sh
-		logger "$interface ($reason): Changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    else
 		logger "$interface ($reason): No changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    fi
@@ -75,14 +79,16 @@ case $reason in
 
 	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
 	    then
+		logger "$interface ($reason): Settings: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+		sync
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_asuka.sh
-		logger "$interface ($reason): Settings: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    elif [ $old_ip_address != $new_ip_address -o $old_routers != $new_file_routers ];
 	    then
+		logger "$interface ($reason): Changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
+		sync
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_asuka.sh
-		logger "$interface ($reason): Changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    else
 		logger "$interface ($reason): No changes: IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    fi
