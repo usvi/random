@@ -27,7 +27,7 @@ try_lock ()
     LOCK_INTERFACE=$1
     LOCK_TRY_TIME=0
 
-    logger "Interface $LOCK_INTERFACE trying to get a lock"
+    #logger "Interface $LOCK_INTERFACE trying to get a lock"
     
     while [ $LOCK_TRY_TIME -lt $LOCK_WAIT_MAX_SECS ];
     do
@@ -48,7 +48,7 @@ try_lock ()
 	sync;
 	exit 1;
     fi
-    logger "Interface $LOCK_INTERFACE got a lock"
+    #logger "Interface $LOCK_INTERFACE got a lock"
 }
 
 
@@ -56,8 +56,8 @@ drop_lock ()
 {
     LOCK_INTERFACE=$1
 
-    logger "Interface $LOCK_INTERFACE releasing locking";
-    sync;
+    #logger "Interface $LOCK_INTERFACE releasing locking";
+    #sync;
     rmdir $SCRIPTS_LOCKDIR;
 }
 
