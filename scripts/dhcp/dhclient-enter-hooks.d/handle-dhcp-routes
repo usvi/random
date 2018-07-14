@@ -9,6 +9,7 @@ case $reason in
     BOUND|RENEW|REBIND|REBOOT|TIMEOUT)
 	# Store new router information
 	echo "$new_routers" > $ROUTE_INFO_PATH/$interface.dat
+	sync
 	
 	# eth0 is the default route
 	if [ "$interface" = "eth1" ]; then
