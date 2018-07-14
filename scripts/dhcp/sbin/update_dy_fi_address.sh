@@ -6,6 +6,7 @@ DYFI_CREDENTIALS=$(head -n 1 /etc/dy.fi_credentials.dat)
 DYFI_ADDRESS_DATA_DIR=/var/lib/dyfi
 UPDATE=no
 TIME_TRESHOLD=432000 #432000 = 5 days
+DYFI_WAIT_TIME=4
 
 mkdir -p $DYFI_ADDRESS_DATA_DIR
 
@@ -41,6 +42,10 @@ fi
 
 if [ $UPDATE = "yes" ]; then
 
-    curl --interface $INTERFACE -D - --user $DYFI_CREDENTIALS https://www.dy.fi/nic/update?hostname=$HOSTNAME
-    echo $CURRENT_IP > $DYFI_ADDRESS_DATA_DIR/$INTERFACE.dat
+    curl --interface $INTERFACE -m $DYFI_WAIT_TIME -D - --user $DYFI_CREDENTIALS https://www.dy.fi/nic/update?hostname=$HOSTNAME
+
+    if [ $? -eq 0 ];
+    then
+	echo $CURRENT_IP > $DYFI_ADDRESS_DATA_DIR/$INTERFACE.dat
+    fi
 fi
