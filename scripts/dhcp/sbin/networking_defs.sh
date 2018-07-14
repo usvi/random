@@ -19,6 +19,49 @@ ADDR_PRIV_SHELL=172.16.8.162
 ADDR_PRIV_ASUKA=172.16.8.161
 
 
+LOCK_WAIT_MAX_SECS=15
+
+
+try_lock ()
+{
+    LOCK_INTERFACE=$1
+    LOCK_TRY_TIME=0
+
+    logger "Interface $LOCK_INTERFACE trying to get a lock"
+    
+    while [ $LOCK_TRY_TIME -lt $LOCK_WAIT_MAX_SECS ];
+    do
+	if mkdir $SCRIPTS_LOCKDIR;
+	then
+	    # Lock acquired
+	    break;
+	else
+	    # Lock not acquired, wait and try again
+	    sleep 1;
+	    LOCK_TRY_TIME=$(( LOCK_TRY_TIME+1 ));
+	fi
+    done
+
+    if [ $LOCK_TRY_TIME -ge $LOCK_WAIT_MAX_SECS ];
+    then
+	logger "Interface $LOCK_INTERFACE could not get a lock! Exiting.";
+	sync;
+	exit 1;
+    fi
+    logger "Interface $LOCK_INTERFACE got a lock"
+}
+
+
+drop_lock ()
+{
+    LOCK_INTERFACE=$1
+
+    logger "Interface $LOCK_INTERFACE releasing locking";
+    sync;
+    rmdir $SCRIPTS_LOCKDIR;
+}
+
+
 reset_fw_rules_by_tag ()
 {
     if [ -z $1 ];

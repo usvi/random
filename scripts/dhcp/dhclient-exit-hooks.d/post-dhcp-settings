@@ -9,7 +9,7 @@ ETH0_DY_NAME=gw.asuka.dy.fi
 ETH1_DY_NAME=shell.asuka.dy.fi
 ETH2_DY_NAME=asuka.dy.fi
 
-LOCK_WAIT_SECS=15
+
 
 
 
@@ -30,37 +30,8 @@ fi
 case $reason in
     BOUND|RENEW|REBIND|REBOOT|TIMEOUT)
 
-	logger "Interface $interface entering lock contest"
-	sync
-
 	# Force only one script to execute at a time
-
-	LOCK_TRY_TIME=0
-
-	while [ $LOCK_TRY_TIME -lt $LOCK_WAIT_SECS ];
-	do
-	    if mkdir $SCRIPTS_LOCKDIR;
-	    then
-		# Lock acquired
-		break;
-	    else
-		# Lock not acquired, wait and try again
-		sleep 1;
-		LOCK_TRY_TIME=$(( LOCK_TRY_TIME+1 ));
-	    fi
-	done
-
-	if [ $LOCK_TRY_TIME -ge $LOCK_WAIT_SECS ];
-	then
-	    logger "Interface $interface could not get a lock! Exiting.";
-	    sync;
-	    exit 1;
-	fi
-
-	logger "Interface $interface has lock"
-	sync
-
-
+	try_lock "$interface"
 
 	# Usual case: First ones are BOUND, rest RENEW
 	
@@ -119,9 +90,8 @@ case $reason in
 	fi
 
 	# Releasing the lock
-	logger "Interface $interface exiting"
-	sync
-	rmdir $SCRIPTS_LOCKDIR
+	drop_lock "$interface"
+	
 	;;
 
 esac
