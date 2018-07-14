@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-. /usr/local/sbin/firewall_defs.sh
+. /usr/local/sbin/networking_defs.sh
 
 PATH=/sbin:/usr/local/bin:$PATH
 ROUTE_INFO_PATH=/var/lib/routes

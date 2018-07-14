@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. /usr/local/sbin/firewall_defs.sh
+. /usr/local/sbin/networking_defs.sh
 
 ADDR_PUB_SHELL=`/sbin/ifconfig $IF_SHELL | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
 FIREWALL_TAG_SHELL="firewall_shell"

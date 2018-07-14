@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. /usr/local/sbin/firewall_defs.sh
+. /usr/local/sbin/networking_defs.sh
 
 ADDR_PUB_VPN=`/sbin/ifconfig $IF_GW | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
 FIREWALL_TAG_VPN="firewall_vpn"

@@ -1,7 +1,7 @@
 #!/bin/bash
 INTERFACE=$1
 
-. /usr/local/sbin/firewall_defs.sh
+. /usr/local/sbin/networking_defs.sh
 
 ROUTE_INFO_PATH=/var/lib/routes
 
