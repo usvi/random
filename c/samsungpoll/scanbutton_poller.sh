@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 SCANNER=xerox_mfp:libusb:001:002
 SCAN_LOCATION_BASE=/media/scans
 SCAN_SLEEP_SECS=7
