@@ -11,7 +11,7 @@ $ua->timeout(10);
 #2019-08-17: Commented out so LWP does not try to load too fancy stuff
 #$ua->agent("Mozilla/5.0 (X11; Linux x86_64; rv:29.0) Gecko/20100101 Firefox/29.0 SeaMonkey/2.26.1");
 
-$VERSION = '0.1';
+$VERSION = '0.2';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -19,7 +19,7 @@ $VERSION = '0.1';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Tue Nov 18 13:22:38 EET 2014'
+ changed     => 'Sat Aug 17 18:35:30 EEST 2019'
 );
 
 my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
