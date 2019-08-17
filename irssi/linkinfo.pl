@@ -8,7 +8,8 @@ use Encode;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
-$ua->agent("Mozilla/5.0 (X11; Linux x86_64; rv:29.0) Gecko/20100101 Firefox/29.0 SeaMonkey/2.26.1");
+#2019-08-17: Commented out so LWP does not try to load too fancy stuff
+#$ua->agent("Mozilla/5.0 (X11; Linux x86_64; rv:29.0) Gecko/20100101 Firefox/29.0 SeaMonkey/2.26.1");
 
 $VERSION = '0.1';
 %IRSSI =
