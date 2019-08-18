@@ -10,8 +10,11 @@ my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
 #2019-08-17: Commented out so LWP does not try to load too fancy stuff
 #$ua->agent("Mozilla/5.0 (X11; Linux x86_64; rv:29.0) Gecko/20100101 Firefox/29.0 SeaMonkey/2.26.1");
+#2019-08-18: Added new agent to pass Cloudflare anti-ddos measures.
+$ua->agent("Wget/1.17.1 (linux-gnu)");
 
-$VERSION = '0.2';
+
+$VERSION = '0.3';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -19,7 +22,7 @@ $VERSION = '0.2';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Sat Aug 17 18:35:30 EEST 2019'
+ changed     => 'Sun Aug 18 11:02:55 EEST 2019'
 );
 
 my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
@@ -27,7 +30,8 @@ my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateI
 sub get_title
 {
 	my $url = $_[0];
-	my $response = $ua->head($url);
+	my $response = $ua->head($url,
+	    'Accept' => 'text/html');
 
 	if($response->is_success() && !($response->content_type() eq "text/html"))
 	{
