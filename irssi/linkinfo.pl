@@ -11,7 +11,8 @@ $ua->timeout(10);
 #2019-08-17: Commented out so LWP does not try to load too fancy stuff
 #$ua->agent("Mozilla/5.0 (X11; Linux x86_64; rv:29.0) Gecko/20100101 Firefox/29.0 SeaMonkey/2.26.1");
 #2019-08-18: Added new agent to pass Cloudflare anti-ddos measures.
-$ua->agent("Wget/1.17.1 (linux-gnu)");
+#$ua->agent("Wget/1.17.1 (linux-gnu)");
+$ua->agent("Omaropotti/1.0 (linux-gnu)");
 
 
 $VERSION = '0.3';
@@ -38,7 +39,8 @@ sub get_title
 		return "";
 	}
 	my $html = $ua->get($url)->content();
-	my ($title) = $html =~ m/<\s*title\s*>([^>]+)<\s*\/\s*title\s*>/gsi;
+	#my ($title) = $html =~ m/<\s*title\s*>([^>]+)<\s*\/\s*title\s*>/gsi;
+	my ($title) = $html =~ m/<\s*title[^>]*>(.+)<\s*\/\s*title/gsi;
 	$title = decode_entities($title);
 	$title =~ s/\s+/ /g;
 	$title =~ s/^\s+|\s+$//g;
