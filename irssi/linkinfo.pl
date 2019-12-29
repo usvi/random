@@ -15,7 +15,7 @@ $ua->timeout(10);
 $ua->agent("Omaropotti/1.0 (linux-gnu)");
 
 
-$VERSION = '0.3';
+$VERSION = '0.4';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -23,7 +23,7 @@ $VERSION = '0.3';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Sun Aug 18 11:02:55 EEST 2019'
+ changed     => 'Sun Dec 29 22:41:59 EET 2019'
 );
 
 my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
@@ -40,13 +40,13 @@ sub get_title
 	}
 	my $html = $ua->get($url)->content();
 	#my ($title) = $html =~ m/<\s*title\s*>([^>]+)<\s*\/\s*title\s*>/gsi;
-	my ($title) = $html =~ m/<\s*title[^>]*>(.+)<\s*\/\s*title/gsi;
+	#my ($title) = $html =~ m/<\s*title[^>]*>(.+)<\s*\/\s*title/gsi;
+	my ($title) = $html =~ m/<\s*title[^>]*>(.+)<\s*\/\s*title/gi;
 	$title = decode_entities($title);
 	$title =~ s/\s+/ /g;
 	$title =~ s/^\s+|\s+$//g;
-	$title = substr($title, 0, 350);
 	
-	if(length($title) > 0)
+	if((length($title) > 0) and (length($title) < 350))
 	{
 		return "Title: " . $title;
 	}
