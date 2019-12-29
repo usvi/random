@@ -44,6 +44,7 @@ sub get_title
 	$title = decode_entities($title);
 	$title =~ s/\s+/ /g;
 	$title =~ s/^\s+|\s+$//g;
+	$title = substr($title, 0, 350);
 	
 	if(length($title) > 0)
 	{
