@@ -93,7 +93,7 @@ sub check_input
 	# Real trigger might have number
 	if ($real_trigger ne $roll_trigger_default)
 	{
-	    if (substr($real_trigger, length($roll_trigger_default)) =~ /\d/)
+	    if (substr($real_trigger, length($roll_trigger_default)) =~ /^\d$/)
 	    {
 		# Successful number
 		$digit_count = "" . int(substr($real_trigger, length($roll_trigger_default)));
@@ -104,7 +104,12 @@ sub check_input
 		return;
 	    }
 	}
-	my $roll_result = int(rand(10 ** $digit_count));
+	my $roll_result = "" . int(rand(10 ** $digit_count));
+
+	while (length($roll_result) < $digit_count)
+	{
+	    $roll_result = "0" . $roll_result;
+	}
 	my $roll_additional_message = filter_for_doubles_n_friends($roll_result, $rest_of_message);
 
 	if (length($roll_additional_message) > 0)
