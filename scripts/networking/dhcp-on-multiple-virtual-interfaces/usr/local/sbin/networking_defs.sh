@@ -1,8 +1,8 @@
 #!/bin/sh
 
-IF_GW=eth0
-IF_SHELL=eth1
-IF_ASUKA=eth2
+IF_GW=virtual0
+IF_SHELL=virtual1
+IF_ASUKA=virtual2
 IF_LAN=eth3
 
 SCRIPTS_LOCKDIR=/var/lib/routes/lock

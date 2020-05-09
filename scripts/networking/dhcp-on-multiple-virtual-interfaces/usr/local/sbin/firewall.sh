@@ -6,6 +6,14 @@
 
 rmdir $SCRIPTS_LOCKDIR
 
+# Create the virtual interfaces
+ip link add link eth0 address 00:90:0b:ff:10:5b $IF_GW type macvlan
+ip link set $IF_GW up
+ip link add link eth0 address 00:90:0b:ff:11:5b $IF_SHELL type macvlan
+ip link set $IF_SHELL up
+ip link add link eth0 address 00:90:0b:ff:12:5b $IF_ASUKA type macvlan
+ip link set $IF_ASUKA up
+
 #Flush chains
 /sbin/iptables -F
 /sbin/iptables -X

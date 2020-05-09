@@ -11,19 +11,19 @@ iface lo inet loopback
 
 
 
-# GW interface 00:90:0b:3e:01:5b
-allow-hotplug eth0
-iface eth0 inet dhcp
+# GW virtual interface virtual0 00:90:0b:ff:10:5b
+allow-hotplug virtual00
+iface virtual0 inet dhcp
       #pre-up ifconfig eth0 hw ether 00:90:04:3e:01:5b
 
-# Shell interface 00:90:0b:3e:01:5c
-allow-hotplug eth1
-iface eth1 inet dhcp
+# Shell virtual interface virtual1 00:90:0b:ff:11:5b
+allow-hotplug virtual1
+iface virtual1 inet dhcp
       #pre-up ifconfig eth1 hw ether 00:90:04:3e:01:5c
 
-# Asuka interface 1a:2b:3c:4d:5f:bc
-allow-hotplug eth2
-iface eth2 inet dhcp
+# Asuka virtual interface virtual2 00:90:0b:ff:12:5b
+allow-hotplug virtual2
+iface virtual2 inet dhcp
       #pre-up ifconfig eth2 hw ether 1a:2b:03:4d:5f:bc
 
 
