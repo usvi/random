@@ -4,8 +4,6 @@
 
 . /usr/local/sbin/networking_defs.sh
 
-rmdir $SCRIPTS_LOCKDIR
-
 #Flush chains
 /sbin/iptables -F
 /sbin/iptables -X

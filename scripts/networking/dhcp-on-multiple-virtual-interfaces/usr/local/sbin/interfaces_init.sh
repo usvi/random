@@ -4,7 +4,7 @@
 
 . /usr/local/sbin/networking_defs.sh
 
-rmdir $SCRIPTS_LOCKDIR
+rm -rf $SCRIPTS_LOCKDIR
 
 # Create the virtual interfaces
 ifconfig $IF_VIRTUAL_BASE up promisc

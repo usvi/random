@@ -4,7 +4,7 @@
 
 . /usr/local/sbin/networking_defs.sh
 
-rmdir $SCRIPTS_LOCKDIR
+rm -rf $SCRIPTS_LOCKDIR
 
 # No other need to specificly handle interfaces,
 # /etc/network/interfaces works somewhat in this.
