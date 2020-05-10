@@ -14,13 +14,13 @@ iface virtual0 inet dhcp
       # Mandatory comment, otherwise does not work :D
 
 
-# Shell virtual interface virtual1 00:90:0b:ff:11:5b
+# Virtual interface virtual1 00:90:0b:ff:11:5b
 allow-hotplug virtual1
 iface virtual1 inet dhcp
       # Mandatory comment, otherwise does not work :D
 
 
-# Asuka virtual interface virtual2 00:90:0b:ff:12:5b
+# Virtual interface virtual2 00:90:0b:ff:12:5b
 allow-hotplug virtual2
 iface virtual2 inet dhcp
       # Mandatory comment, otherwise does not work :D
