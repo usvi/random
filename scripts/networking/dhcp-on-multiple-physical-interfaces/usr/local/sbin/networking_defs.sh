@@ -1,32 +1,35 @@
 #!/bin/sh
 
-IF_GW=eth0
-IF_SHELL=eth1
-IF_ASUKA=eth2
+# Names for interfaces
+# IF_PUB0 is explicit GW in scripts
+IF_PUB0=eth0
+IF_PUB1=eth1
+IF_PUB2=eth2
 IF_LAN=eth3
+# For Openvpn
+IF_TUN=tun0
 
-IF_GW_DY_NAME=gw.asuka.dy.fi
-IF_SHELL_DY_NAME=shell.asuka.dy.fi
-IF_ASUKA_DY_NAME=asuka.dy.fi
+# LAN-side corresponding addresses and ranges
+ADDR_PRIV0=172.16.8.254
+ADDR_PRIV1=172.16.8.162
+ADDR_PRIV2=172.16.8.161
+RANGE_LAN=172.16.8.0/24
+RANGE_OPENVPN=172.16.8.0/28
 
+# Dy.fi names
+IF_PUB0_DY_NAME=gw.asuka.dy.fi
+IF_PUB1_DY_NAME=shell.asuka.dy.fi
+IF_PUB2_DY_NAME=asuka.dy.fi
+
+# Other settings
 ROUTE_INFO_PATH=/var/lib/routes
 SCRIPTS_LOCKDIR=$ROUTE_INFO_PATH/lock
 NEW_ROUTERS_TIME_TRESHOLD=30
-
-IF_TUN=tun0
-RANGE_OPENVPN=172.16.8.0/28
-RANGE_LAN=172.16.8.0/24
-#ADDR_PUB_GW=83.150.124.235
-ADDR_PRIV_GW=172.16.8.254
-#ADDR_PUB_SHELL=83.150.124.11
-ADDR_PRIV_SHELL=172.16.8.162
-#ADDR_PUB_WWW=83.150.124.234
-#ADDR_PRIV_WWW=172.16.8.161
-ADDR_PRIV_ASUKA=172.16.8.161
-
-
 LOCK_WAIT_MAX_SECS=15
 
+# USE flags: Define non-zero if want enabled
+USE_DY_FI="yes"
+USE_OPENVPN="yes"
 
 try_lock ()
 {
