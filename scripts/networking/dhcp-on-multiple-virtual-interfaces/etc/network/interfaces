@@ -26,7 +26,7 @@ iface virtual2 inet dhcp
       # Mandatory comment, otherwise does not work :D
 
 
-# LAN interface
+# LAN physical interface eth3 00:90:0b:3e:01:5d
 auto eth3
 iface eth3 inet static
       address 172.16.8.254
