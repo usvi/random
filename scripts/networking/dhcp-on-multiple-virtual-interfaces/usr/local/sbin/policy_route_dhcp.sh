@@ -3,8 +3,6 @@ INTERFACE=$1
 
 . /usr/local/sbin/networking_defs.sh
 
-ROUTE_INFO_PATH=/var/lib/routes
-
 
 if [ -z $INTERFACE ];
 then
@@ -60,28 +58,28 @@ ip rule add from $IPADDR/32 table $INTERFACE
 ip rule add to $IPADDR/32 table $INTERFACE
 
 # Set additional lookups
-# For shell
-if [ $INTERFACE = $IF_SHELL ];
+# For interface 1
+if [ $INTERFACE = $IF_PUB1 ];
 then
     # Remove rules for LAN
-    while ip rule show | grep "$ADDR_PRIV_SHELL.*$RANGE_LAN" &>/dev/null; do
-        ip rule delete from $ADDR_PRIV_SHELL to $RANGE_LAN
+    while ip rule show | grep "$ADDR_PRIV1.*$RANGE_LAN" &>/dev/null; do
+        ip rule delete from $ADDR_PRIV1 to $RANGE_LAN
     done
     # Use specific lookup table for the shell interface
-    ip rule add from $ADDR_PRIV_SHELL lookup $IF_SHELL
+    ip rule add from $ADDR_PRIV1 lookup $IF_PUB1
     # But use main lookup table for LAN stuff
-    ip rule add from $ADDR_PRIV_SHELL to $RANGE_LAN lookup main
+    ip rule add from $ADDR_PRIV1 to $RANGE_LAN lookup main
 fi
-# For webserver
-if [ $INTERFACE = $IF_ASUKA ];
+# For interface 2
+if [ $INTERFACE = $IF_PUB2 ];
 then
     # Remove rules for LAN
-    while ip rule show | grep "$ADDR_PRIV_ASUKA.*$RANGE_LAN" &>/dev/null; do
-        ip rule delete from $ADDR_PRIV_ASUKA to $RANGE_LAN
+    while ip rule show | grep "$ADDR_PRIV2.*$RANGE_LAN" &>/dev/null; do
+        ip rule delete from $ADDR_PRIV2 to $RANGE_LAN
     done
     # Use specific lookup table for the asuka www interface
-    ip rule add from $ADDR_PRIV_ASUKA lookup $IF_ASUKA
+    ip rule add from $ADDR_PRIV2 lookup $IF_PUB2
     # But use main lookup table for LAN stuff
-    ip rule add from $ADDR_PRIV_ASUKA to $RANGE_LAN lookup main
+    ip rule add from $ADDR_PRIV1 to $RANGE_LAN lookup main
 fi
 

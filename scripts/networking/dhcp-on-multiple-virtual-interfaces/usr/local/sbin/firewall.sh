@@ -8,12 +8,12 @@ rmdir $SCRIPTS_LOCKDIR
 
 # Create the virtual interfaces
 ifconfig $IF_VIRTUAL_BASE up promisc
-ip link add link $IF_VIRTUAL_BASE address 00:90:0b:ff:10:5b $IF_GW type macvlan
-ip link set $IF_GW up
-ip link add link $IF_VIRTUAL_BASE address 00:90:0b:ff:11:5b $IF_SHELL type macvlan
-ip link set $IF_SHELL up
-ip link add link $IF_VIRTUAL_BASE address 00:90:0b:ff:12:5b $IF_ASUKA type macvlan
-ip link set $IF_ASUKA up
+ip link add link $IF_VIRTUAL_BASE address 00:90:0b:ff:10:5b $IF_PUB0 type macvlan
+ip link set $IF_PUB0 up
+ip link add link $IF_VIRTUAL_BASE address 00:90:0b:ff:11:5b $IF_PUB1 type macvlan
+ip link set $IF_PUB1 up
+ip link add link $IF_VIRTUAL_BASE address 00:90:0b:ff:12:5b $IF_PUB2 type macvlan
+ip link set $IF_PUB2 up
 
 #Flush chains
 /sbin/iptables -F
@@ -36,8 +36,8 @@ ip link set $IF_ASUKA up
 /sbin/iptables -A INPUT -i $IF_LAN -j ACCEPT
 
 
-/sbin/iptables -t nat -A POSTROUTING -o $IF_GW -j MASQUERADE
-/sbin/iptables -A FORWARD -i $IF_GW -o $IF_LAN -m state --state RELATED,ESTABLISHED -j ACCEPT
-/sbin/iptables -A FORWARD -i $IF_LAN -o $IF_GW -j ACCEPT
-/sbin/iptables -A INPUT -i $IF_GW -m state --state RELATED,ESTABLISHED -j ACCEPT
+/sbin/iptables -t nat -A POSTROUTING -o $IF_PUB0 -j MASQUERADE
+/sbin/iptables -A FORWARD -i $IF_PUB0 -o $IF_LAN -m state --state RELATED,ESTABLISHED -j ACCEPT
+/sbin/iptables -A FORWARD -i $IF_LAN -o $IF_PUB0 -j ACCEPT
+/sbin/iptables -A INPUT -i $IF_PUB0 -m state --state RELATED,ESTABLISHED -j ACCEPT
 

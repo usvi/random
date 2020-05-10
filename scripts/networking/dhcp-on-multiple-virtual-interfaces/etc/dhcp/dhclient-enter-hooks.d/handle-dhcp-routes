@@ -12,15 +12,12 @@ case $reason in
 	echo "$new_routers" > $ROUTE_INFO_PATH/$interface.dat
 	sync
 	
-	# IF_GW handled normally, no need to remove routes
-	if [ "$interface" = "$IF_SHELL" ]; then
+	# GW (IF_PUB0) handled normally, no need to remove routes.
+	# Other routes need to be operated.
+	if [ "$interface" = "$IF_PUB1" ]; then
 	    unset new_routers
 	fi
-	if [ "$interface" = "$IF_ASUKA" ]; then
-	    unset new_routers
-	fi
-	if [ "$interface" = "$IF_LAN" ]; then
-	    # LAN IF, shouldn't happen
+	if [ "$interface" = "$IF_PUB2" ]; then
 	    unset new_routers
 	fi
 	;;
