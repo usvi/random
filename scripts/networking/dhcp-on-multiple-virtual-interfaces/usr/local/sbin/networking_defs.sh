@@ -29,6 +29,9 @@ SCRIPTS_LOCKDIR=$ROUTE_INFO_PATH/lock
 NEW_ROUTERS_TIME_TRESHOLD=30
 LOCK_WAIT_MAX_SECS=15
 
+# USE flags: Define non-zero if want enabled
+USE_DY_FI="yes"
+USE_OPENVPN="yes"
 
 try_lock ()
 {

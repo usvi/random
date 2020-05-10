@@ -65,7 +65,7 @@ then
     while ip rule show | grep "$ADDR_PRIV1.*$RANGE_LAN" &>/dev/null; do
         ip rule delete from $ADDR_PRIV1 to $RANGE_LAN
     done
-    # Use specific lookup table for the shell interface
+    # Use specific lookup table for interface 1
     ip rule add from $ADDR_PRIV1 lookup $IF_PUB1
     # But use main lookup table for LAN stuff
     ip rule add from $ADDR_PRIV1 to $RANGE_LAN lookup main
@@ -77,7 +77,7 @@ then
     while ip rule show | grep "$ADDR_PRIV2.*$RANGE_LAN" &>/dev/null; do
         ip rule delete from $ADDR_PRIV2 to $RANGE_LAN
     done
-    # Use specific lookup table for the asuka www interface
+    # Use specific lookup table for interface 2
     ip rule add from $ADDR_PRIV2 lookup $IF_PUB2
     # But use main lookup table for LAN stuff
     ip rule add from $ADDR_PRIV2 to $RANGE_LAN lookup main

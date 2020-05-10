@@ -22,21 +22,25 @@ conf_ifaces_on_gw_change ()
     then
 	logger "Running $IF_PUB1 interface scripts due to gw change"
 	/usr/local/sbin/policy_route_dhcp.sh $IF_PUB1
-	/usr/local/sbin/firewall_shell.sh
-	/usr/local/sbin/update_dy_fi_address.sh $IF_PUB1 $IF_PUB1_DY_NAME
+	/usr/local/sbin/firewall_interface1.sh
+
+	if [ -n "$USE_DY_FI" ];
+	then
+	    /usr/local/sbin/update_dy_fi_address.sh $IF_PUB1 $IF_PUB1_DY_NAME
+	fi
     fi
     if [ $(if_has_ip "$IF_PUB2") = "1" ];
     then
 	logger "Running $IF_PUB2 interface scripts due to gw change"
 	/usr/local/sbin/policy_route_dhcp.sh $IF_PUB2
-	/usr/local/sbin/firewall_asuka.sh
-	/usr/local/sbin/update_dy_fi_address.sh $IF_PUB2 $IF_PUB2_DY_NAME
+	/usr/local/sbin/firewall_interface2.sh
+
+	if [ -n "$USE_DY_FI" ];
+	then
+	    /usr/local/sbin/update_dy_fi_address.sh $IF_PUB2 $IF_PUB2_DY_NAME
+	fi
     fi
 }
-
-
-
-
 
 
 # Get new routers from file, if time difference small enough
@@ -47,8 +51,6 @@ if [ $TIME_DIFF -lt $NEW_ROUTERS_TIME_TRESHOLD ];
 then
     new_file_routers=$(head -n 1 $ROUTE_INFO_PATH/$interface.dat)
 fi
-
-
 
 
 case $reason in
@@ -66,18 +68,29 @@ case $reason in
 	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
 	    then
 		sync
-		/usr/local/sbin/setup_vpn.sh
-		/usr/local/sbin/firewall_vpn.sh
+
+		if [ -n "$USE_OPENVPN" ];
+		then
+		    /usr/local/sbin/setup_vpn.sh
+		    /usr/local/sbin/firewall_vpn.sh
+		fi
 		conf_ifaces_on_gw_change
 		
 	    elif [ "$old_ip_address" != "$new_ip_address" -o "$old_routers" != "$new_file_routers" ];
 	    then
 		sync
-		/usr/local/sbin/setup_vpn.sh
-		/usr/local/sbin/firewall_vpn.sh
+
+		if [ -n "$USE_OPENVPN" ];
+		then
+		    /usr/local/sbin/setup_vpn.sh
+		    /usr/local/sbin/firewall_vpn.sh
+		fi
 		conf_ifaces_on_gw_change
 	    fi
-	    /usr/local/sbin/update_dy_fi_address.sh $interface $IF_PUB0_DY_NAME
+	    if [ -n "$USE_DY_FI" ];
+	    then
+		/usr/local/sbin/update_dy_fi_address.sh $interface $IF_PUB0_DY_NAME
+	    fi
 	fi
 
 
@@ -91,13 +104,16 @@ case $reason in
 	    if [ "$reason" = "BOUND" -o "$reason" = "REBOOT" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh $interface
-		/usr/local/sbin/firewall_shell.sh
+		/usr/local/sbin/firewall_interface1.sh
 	    elif [ "$old_ip_address" != "$new_ip_address" -o "$old_routers" != "$new_file_routers" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh $interface
-		/usr/local/sbin/firewall_shell.sh
+		/usr/local/sbin/firewall_interface1.sh
 	    fi
-	    /usr/local/sbin/update_dy_fi_address.sh $interface $IF_PUB1_DY_NAME
+	    if [ -n "$USE_DY_FI" ];
+	    then
+		/usr/local/sbin/update_dy_fi_address.sh $interface $IF_PUB1_DY_NAME
+	    fi
 	fi
 	
 	if [ "$interface" = "$IF_PUB2" ];
@@ -110,13 +126,16 @@ case $reason in
 	    if [ "$reason" = "BOUND" -o "$reason" = "REBOOT" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh $interface
-		/usr/local/sbin/firewall_asuka.sh
+		/usr/local/sbin/firewall_interface2.sh
 	    elif [ "$old_ip_address" != "$new_ip_address" -o "$old_routers" != "$new_file_routers" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh $interface
-		/usr/local/sbin/firewall_asuka.sh
+		/usr/local/sbin/firewall_interface2.sh
 	    fi
-	    /usr/local/sbin/update_dy_fi_address.sh $interface $IF_PUB2_DY_NAME
+	    if [ -n "$USE_DY_FI" ];
+	    then
+		/usr/local/sbin/update_dy_fi_address.sh $interface $IF_PUB2_DY_NAME
+	    fi
 	fi
 
 	# Releasing the lock
