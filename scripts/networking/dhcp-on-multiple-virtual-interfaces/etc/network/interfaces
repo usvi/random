@@ -8,23 +8,22 @@ auto lo
 iface lo inet loopback
 
 
-
-
-
 # GW virtual interface virtual0 00:90:0b:ff:10:5b
-allow-hotplug virtual00
+allow-hotplug virtual0
 iface virtual0 inet dhcp
-      #pre-up ifconfig eth0 hw ether 00:90:04:3e:01:5b
+      # Mandatory comment, otherwise does not work :D
+
 
 # Shell virtual interface virtual1 00:90:0b:ff:11:5b
 allow-hotplug virtual1
 iface virtual1 inet dhcp
-      #pre-up ifconfig eth1 hw ether 00:90:04:3e:01:5c
+      # Mandatory comment, otherwise does not work :D
+
 
 # Asuka virtual interface virtual2 00:90:0b:ff:12:5b
 allow-hotplug virtual2
 iface virtual2 inet dhcp
-      #pre-up ifconfig eth2 hw ether 1a:2b:03:4d:5f:bc
+      # Mandatory comment, otherwise does not work :D
 
 
 # LAN interface

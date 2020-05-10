@@ -1,5 +1,6 @@
 #!/bin/sh
 
+IF_VIRTUAL_BASE=eth0
 IF_GW=virtual0
 IF_SHELL=virtual1
 IF_ASUKA=virtual2
