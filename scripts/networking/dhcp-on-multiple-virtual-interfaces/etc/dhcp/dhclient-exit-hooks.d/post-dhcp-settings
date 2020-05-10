@@ -58,7 +58,6 @@ case $reason in
 	try_lock "$interface"
 
 	# Usual case: First ones are BOUND, rest RENEW
-	
 	if [ "$interface" = "$IF_PUB0" ];
 	then
 	    logger "$interface ($reason): IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
@@ -71,7 +70,7 @@ case $reason in
 		/usr/local/sbin/firewall_vpn.sh
 		conf_ifaces_on_gw_change
 		
-	    elif [ $old_ip_address != $new_ip_address -o $old_routers != $new_file_routers ];
+	    elif [ "$old_ip_address" != "$new_ip_address" -o "$old_routers" != "$new_file_routers" ];
 	    then
 		sync
 		/usr/local/sbin/setup_vpn.sh
@@ -89,11 +88,11 @@ case $reason in
 	fi
 	if [ "$interface" = "$IF_PUB1" -a $(if_has_ip "$IF_PUB0") = "1" ];
 	then
-	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
+	    if [ "$reason" = "BOUND" -o "$reason" = "REBOOT" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_shell.sh
-	    elif [ $old_ip_address != $new_ip_address -o $old_routers != $new_file_routers ];
+	    elif [ "$old_ip_address" != "$new_ip_address" -o "$old_routers" != "$new_file_routers" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_shell.sh
@@ -108,11 +107,11 @@ case $reason in
 	fi
 	if [ "$interface" = "$IF_PUB2" -a $(if_has_ip "$IF_PUB0") = "1" ];
 	then
-	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
+	    if [ "$reason" = "BOUND" -o "$reason" = "REBOOT" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_asuka.sh
-	    elif [ $old_ip_address != $new_ip_address -o $old_routers != $new_file_routers ];
+	    elif [ "$old_ip_address" != "$new_ip_address" -o "$old_routers" != "$new_file_routers" ];
 	    then
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_asuka.sh
