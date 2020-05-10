@@ -80,6 +80,6 @@ then
     # Use specific lookup table for the asuka www interface
     ip rule add from $ADDR_PRIV2 lookup $IF_PUB2
     # But use main lookup table for LAN stuff
-    ip rule add from $ADDR_PRIV1 to $RANGE_LAN lookup main
+    ip rule add from $ADDR_PRIV2 to $RANGE_LAN lookup main
 fi
 
