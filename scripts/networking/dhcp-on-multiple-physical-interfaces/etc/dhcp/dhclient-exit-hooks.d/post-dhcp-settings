@@ -3,14 +3,6 @@
 . /usr/local/sbin/networking_defs.sh
 
 PATH=/sbin:/usr/local/bin:$PATH
-ROUTE_INFO_PATH=/var/lib/routes
-TIME_TRESHOLD=30
-ETH0_DY_NAME=gw.asuka.dy.fi
-ETH1_DY_NAME=shell.asuka.dy.fi
-ETH2_DY_NAME=asuka.dy.fi
-
-
-
 
 
 # Only update if
@@ -32,14 +24,14 @@ conf_ifaces_on_gw_change ()
 	logger "Running shell interface scripts due to gw change"
 	/usr/local/sbin/policy_route_dhcp.sh $IF_SHELL
 	/usr/local/sbin/firewall_shell.sh
-	/usr/local/sbin/update_dy_fi_address.sh $IF_SHELL $ETH1_DY_NAME
+	/usr/local/sbin/update_dy_fi_address.sh $IF_SHELL $IF_SHELL_DY_NAME
     fi
     if [ $(if_has_ip "$IF_ASUKA") = "1" ];
     then
 	logger "Running asuka interface scripts due to gw change"
 	/usr/local/sbin/policy_route_dhcp.sh $IF_ASUKA
 	/usr/local/sbin/firewall_asuka.sh
-	/usr/local/sbin/update_dy_fi_address.sh $IF_ASUKA $ETH2_DY_NAME
+	/usr/local/sbin/update_dy_fi_address.sh $IF_ASUKA $IF_ASUKA_DY_NAME
     fi
 }
 
@@ -52,7 +44,7 @@ conf_ifaces_on_gw_change ()
 new_file_routers=""
 TIME_DIFF=$((`date +%s` - `stat -c %Y $ROUTE_INFO_PATH/$interface.dat`))
 
-if [ $TIME_DIFF -lt $TIME_TRESHOLD ];
+if [ $TIME_DIFF -lt $NEW_ROUTERS_TIME_TRESHOLD ];
 then
     new_file_routers=$(head -n 1 $ROUTE_INFO_PATH/$interface.dat)
 fi
@@ -68,7 +60,7 @@ case $reason in
 
 	# Usual case: First ones are BOUND, rest RENEW
 	
-	if [ "$interface" = "eth0" ];
+	if [ "$interface" = "$IF_GW" ];
 	then
 	    logger "$interface ($reason): IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    sync
@@ -87,16 +79,16 @@ case $reason in
 		/usr/local/sbin/firewall_vpn.sh
 		conf_ifaces_on_gw_change
 	    fi
-	    /usr/local/sbin/update_dy_fi_address.sh $interface $ETH0_DY_NAME
+	    /usr/local/sbin/update_dy_fi_address.sh $interface $IF_GW_DY_NAME
 	fi
 
 
-	if [ "$interface" = "eth1" ];
+	if [ "$interface" = "$IF_SHELL" ];
 	then
 	    logger "$interface ($reason): IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    sync
 	fi
-	if [ "$interface" = "eth1" -a $(if_has_ip "$IF_GW") = "1" ];
+	if [ "$interface" = "$IF_SHELL" -a $(if_has_ip "$IF_GW") = "1" ];
 	then
 	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
 	    then
@@ -107,15 +99,15 @@ case $reason in
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_shell.sh
 	    fi
-	    /usr/local/sbin/update_dy_fi_address.sh $interface $ETH1_DY_NAME
+	    /usr/local/sbin/update_dy_fi_address.sh $interface $IF_SHELL_DY_NAME
 	fi
 	
-	if [ "$interface" = "eth2" ];
+	if [ "$interface" = "$IF_ASUKA" ];
 	then
 	    logger "$interface ($reason): IP: $old_ip_address -> $new_ip_address; GW: $old_routers -> $new_file_routers"
 	    sync
 	fi
-	if [ "$interface" = "eth2" -a $(if_has_ip "$IF_GW") = "1" ];
+	if [ "$interface" = "$IF_ASUKA" -a $(if_has_ip "$IF_GW") = "1" ];
 	then
 	    if [ $reason = "BOUND" -o $reason = "REBOOT" ];
 	    then
@@ -126,7 +118,7 @@ case $reason in
 		/usr/local/sbin/policy_route_dhcp.sh $interface
 		/usr/local/sbin/firewall_asuka.sh
 	    fi
-	    /usr/local/sbin/update_dy_fi_address.sh $interface $ETH2_DY_NAME
+	    /usr/local/sbin/update_dy_fi_address.sh $interface $IF_ASUKA_DY_NAME
 	fi
 
 	# Releasing the lock

@@ -5,7 +5,13 @@ IF_SHELL=eth1
 IF_ASUKA=eth2
 IF_LAN=eth3
 
-SCRIPTS_LOCKDIR=/var/lib/routes/lock
+IF_GW_DY_NAME=gw.asuka.dy.fi
+IF_SHELL_DY_NAME=shell.asuka.dy.fi
+IF_ASUKA_DY_NAME=asuka.dy.fi
+
+ROUTE_INFO_PATH=/var/lib/routes
+SCRIPTS_LOCKDIR=$ROUTE_INFO_PATH/lock
+NEW_ROUTERS_TIME_TRESHOLD=30
 
 IF_TUN=tun0
 RANGE_OPENVPN=172.16.8.0/28
