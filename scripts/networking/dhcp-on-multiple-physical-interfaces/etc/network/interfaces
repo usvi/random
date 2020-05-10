@@ -11,20 +11,22 @@ iface lo inet loopback
 
 
 
-# GW interface 00:90:0b:3e:01:5b
+# GW physical interface eth0 00:90:0b:3e:01:5b
 allow-hotplug eth0
 iface eth0 inet dhcp
-      #pre-up ifconfig eth0 hw ether 00:90:04:3e:01:5b
+      # Mandatory comment, otherwise possibly does not work :D
 
-# Shell interface 00:90:0b:3e:01:5c
+
+# Physical interface eth1 00:90:0b:3e:01:5c
 allow-hotplug eth1
 iface eth1 inet dhcp
-      #pre-up ifconfig eth1 hw ether 00:90:04:3e:01:5c
+      # Mandatory comment, otherwise possibly does not work :D
 
-# Asuka interface 1a:2b:3c:4d:5f:bc
+
+# Physical interface eth2 1a:2b:3c:4d:5f:bc
 allow-hotplug eth2
 iface eth2 inet dhcp
-      #pre-up ifconfig eth2 hw ether 1a:2b:03:4d:5f:bc
+      # Mandatory comment, otherwise possibly does not work :D
 
 
 # LAN interface
