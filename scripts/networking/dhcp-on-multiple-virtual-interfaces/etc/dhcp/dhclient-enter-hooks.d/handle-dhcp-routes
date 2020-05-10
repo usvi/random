@@ -1,7 +1,8 @@
 #!/bin/bash
 #
+. /usr/local/sbin/networking_defs.sh
+
 PATH=/sbin:/usr/local/bin:$PATH
-ROUTE_INFO_PATH=/var/lib/routes
 
 mkdir -p $ROUTE_INFO_PATH
 
@@ -11,14 +12,14 @@ case $reason in
 	echo "$new_routers" > $ROUTE_INFO_PATH/$interface.dat
 	sync
 	
-	# eth0 is the default route
-	if [ "$interface" = "eth1" ]; then
+	# IF_GW handled normally, no need to remove routes
+	if [ "$interface" = "$IF_SHELL" ]; then
 	    unset new_routers
 	fi
-	if [ "$interface" = "eth2" ]; then
+	if [ "$interface" = "$IF_ASUKA" ]; then
 	    unset new_routers
 	fi
-	if [ "$interface" = "eth3" ]; then
+	if [ "$interface" = "$IF_LAN" ]; then
 	    # LAN IF, shouldn't happen
 	    unset new_routers
 	fi

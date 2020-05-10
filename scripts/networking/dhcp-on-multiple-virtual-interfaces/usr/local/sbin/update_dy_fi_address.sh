@@ -21,7 +21,7 @@ if [ -z $CURRENT_IP ]; then
 fi
 
 # Try to get stored ip address
-OLD_IP=$(head -n 1 $DYFI_ADDRESS_DATA_DIR/$INTERFACE.dat)
+OLD_IP=$(head -n 1 $DYFI_ADDRESS_DATA_DIR/$HOSTNAME.dat)
 
 # Make all the checks on the address data
 if [ -z $OLD_IP ]; then
@@ -31,7 +31,7 @@ elif [ $CURRENT_IP != $OLD_IP ]; then
     # Different IP addresses -> update
     UPDATE=yes
 else
-    TIME_DIFF=$((`date +%s` - `stat -c %Y $DYFI_ADDRESS_DATA_DIR/$INTERFACE.dat`))
+    TIME_DIFF=$((`date +%s` - `stat -c %Y $DYFI_ADDRESS_DATA_DIR/$HOSTNAME.dat`))
 
     if [ $TIME_DIFF -gt $TIME_TRESHOLD ]; then
 	# Threshold too much -> update!
@@ -46,6 +46,6 @@ if [ $UPDATE = "yes" ]; then
 
     if [ $? -eq 0 ];
     then
-	echo $CURRENT_IP > $DYFI_ADDRESS_DATA_DIR/$INTERFACE.dat
+	echo $CURRENT_IP > $DYFI_ADDRESS_DATA_DIR/$HOSTNAME.dat
     fi
 fi
