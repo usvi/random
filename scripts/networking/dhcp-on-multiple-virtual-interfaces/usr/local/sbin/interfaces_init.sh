@@ -7,7 +7,7 @@
 rm -rf "$SCRIPTS_LOCKDIR"
 
 # Create the virtual interfaces
-ifconfig "$IF_VIRTUAL_BASE" up promisc
+ifconfig "$IF_VIRTUAL_BASE" up
 ip link add link "$IF_VIRTUAL_BASE" address 00:90:0b:ff:10:5b "$IF_PUB0" type macvlan
 ip link set "$IF_PUB0" up
 ip link add link "$IF_VIRTUAL_BASE" address 00:90:0b:ff:11:5b "$IF_PUB1" type macvlan
