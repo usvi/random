@@ -56,9 +56,6 @@ fi
 case $reason in
     BOUND|RENEW|REBIND|REBOOT|TIMEOUT)
 
-	# Force only one script to execute at a time
-	try_lock "$interface"
-
 	# Usual case: First ones are BOUND, rest RENEW
 	if [ "$interface" = "$IF_PUB0" ];
 	then
@@ -138,7 +135,7 @@ case $reason in
 	    fi
 	fi
 
-	# Releasing the lock
+	# Releasing the lock acquired in dhclient-enter-hooks.d/handle-dhcp-routes
 	drop_lock "$interface"
 	
 	;;

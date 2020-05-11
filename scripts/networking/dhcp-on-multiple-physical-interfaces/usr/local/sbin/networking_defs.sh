@@ -24,8 +24,8 @@ IF_PUB2_DY_NAME=asuka.dy.fi
 # Other settings
 ROUTE_INFO_PATH=/var/lib/routes
 SCRIPTS_LOCKDIR=$ROUTE_INFO_PATH/lock
-NEW_ROUTERS_TIME_TRESHOLD=30
-LOCK_WAIT_MAX_SECS=15
+NEW_ROUTERS_TIME_TRESHOLD=60
+LOCK_WAIT_MAX_SECS=30
 
 # USE flags: Define non-zero if want enabled
 USE_DY_FI="yes"
@@ -54,7 +54,6 @@ try_lock ()
     if [ $LOCK_TRY_TIME -ge $LOCK_WAIT_MAX_SECS ];
     then
 	logger "Interface $LOCK_INTERFACE could not get a lock! Exiting.";
-	sync;
 	exit 1;
     fi
     #logger "Interface $LOCK_INTERFACE got a lock"
@@ -66,7 +65,6 @@ drop_lock ()
     LOCK_INTERFACE=$1
 
     #logger "Interface $LOCK_INTERFACE releasing locking";
-    #sync;
     rmdir $SCRIPTS_LOCKDIR;
 }
 
