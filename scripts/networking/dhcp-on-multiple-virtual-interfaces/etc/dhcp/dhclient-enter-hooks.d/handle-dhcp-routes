@@ -2,8 +2,6 @@
 #
 . /usr/local/sbin/networking_defs.sh
 
-PATH=/sbin:/usr/local/bin:$PATH
-
 mkdir -p $ROUTE_INFO_PATH
 
 case $reason in

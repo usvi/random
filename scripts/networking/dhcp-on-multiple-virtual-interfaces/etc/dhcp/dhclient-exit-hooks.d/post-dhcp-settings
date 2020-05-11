@@ -2,8 +2,6 @@
 #
 . /usr/local/sbin/networking_defs.sh
 
-PATH=/sbin:/usr/local/bin:$PATH
-
 
 # Only update if
 # 1. Bound (update everything)
