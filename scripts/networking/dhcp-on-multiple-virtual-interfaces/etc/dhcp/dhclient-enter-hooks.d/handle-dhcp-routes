@@ -8,6 +8,11 @@ mkdir -p $ROUTE_INFO_PATH
 
 case $reason in
     BOUND|RENEW|REBIND|REBOOT|TIMEOUT)
+
+	# Lock for the duration of entire "stack"
+	# Otherwise we are in trouble.
+	try_lock "$interface"
+	
 	# Store new router information
 	echo "$new_routers" > $ROUTE_INFO_PATH/$interface.dat
 	sync
