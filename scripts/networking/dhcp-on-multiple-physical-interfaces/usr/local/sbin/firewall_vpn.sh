@@ -10,7 +10,7 @@ reset_fw_rules_by_tag "$FIREWALL_TAG_VPN"
 
 # Accept public interface VPN daemon connections to 443
 /sbin/iptables -A INPUT -i "$IF_PUB0" -d "$ADDR_PUB_VPN" -m state --state NEW -p tcp --dport 443 -j ACCEPT -m comment --comment "$FIREWALL_TAG_VPN"
-# Outbound connection via VPN
+# Outbound connections via VPN
 /sbin/iptables -A INPUT -i "$IF_TUN" -j ACCEPT -m comment --comment "$FIREWALL_TAG_VPN"
 /sbin/iptables -A FORWARD -i "$IF_TUN" -j ACCEPT -m comment --comment "$FIREWALL_TAG_VPN"
 /sbin/iptables -A FORWARD -i "$IF_PUB0" -o "$IF_TUN" -m state --state RELATED,ESTABLISHED -j ACCEPT -m comment --comment "$FIREWALL_TAG_VPN"
