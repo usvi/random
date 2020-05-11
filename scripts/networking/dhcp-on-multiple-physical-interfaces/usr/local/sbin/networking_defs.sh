@@ -23,7 +23,7 @@ IF_PUB2_DY_NAME=asuka.dy.fi
 
 # Other settings
 ROUTE_INFO_PATH=/var/lib/routes
-SCRIPTS_LOCKDIR=$ROUTE_INFO_PATH/lock
+SCRIPTS_LOCKDIR="$ROUTE_INFO_PATH/lock"
 NEW_ROUTERS_TIME_TRESHOLD=60
 LOCK_WAIT_MAX_SECS=30
 
@@ -33,14 +33,14 @@ USE_OPENVPN="yes"
 
 try_lock ()
 {
-    LOCK_INTERFACE=$1
+    LOCK_INTERFACE="$1"
     LOCK_TRY_TIME=0
 
     #logger "Interface $LOCK_INTERFACE trying to get a lock"
     
-    while [ $LOCK_TRY_TIME -lt $LOCK_WAIT_MAX_SECS ];
+    while [ "$LOCK_TRY_TIME" -lt "$LOCK_WAIT_MAX_SECS" ];
     do
-	if mkdir $SCRIPTS_LOCKDIR;
+	if mkdir "$SCRIPTS_LOCKDIR";
 	then
 	    # Lock acquired
 	    break;
@@ -51,7 +51,7 @@ try_lock ()
 	fi
     done
 
-    if [ $LOCK_TRY_TIME -ge $LOCK_WAIT_MAX_SECS ];
+    if [ "$LOCK_TRY_TIME" -ge "$LOCK_WAIT_MAX_SECS" ];
     then
 	logger "Interface $LOCK_INTERFACE could not get a lock! Exiting.";
 	exit 1;
@@ -65,7 +65,7 @@ drop_lock ()
     LOCK_INTERFACE=$1
 
     #logger "Interface $LOCK_INTERFACE releasing locking";
-    rmdir $SCRIPTS_LOCKDIR;
+    rmdir "$SCRIPTS_LOCKDIR";
 }
 
 
@@ -74,7 +74,7 @@ if_has_ip ()
     INTERFACE=$1
     TEST_IP=`/sbin/ifconfig $INTERFACE | grep 'inet addr:' | sed s/.*'inet addr:'// | sed s/' '.*//`
 
-    if [ -z $TEST_IP ];
+    if [ -z "$TEST_IP" ];
     then
 	echo "0"
     else

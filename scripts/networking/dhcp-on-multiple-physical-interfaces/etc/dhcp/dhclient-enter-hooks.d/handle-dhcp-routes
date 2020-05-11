@@ -2,9 +2,9 @@
 #
 . /usr/local/sbin/networking_defs.sh
 
-mkdir -p $ROUTE_INFO_PATH
+mkdir -p "$ROUTE_INFO_PATH"
 
-case $reason in
+case "$reason" in
     BOUND|RENEW|REBIND|REBOOT|TIMEOUT)
 
 	# Lock for the duration of entire "stack"
@@ -12,7 +12,7 @@ case $reason in
 	try_lock "$interface"
 
 	# Store new router information
-	echo "$new_routers" > $ROUTE_INFO_PATH/$interface.dat
+	echo "$new_routers" > "$ROUTE_INFO_PATH/$interface.dat"
 	sync
 	
 	# GW (IF_PUB0) handled normally, no need to remove routes.

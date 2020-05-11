@@ -4,7 +4,7 @@
 
 . /usr/local/sbin/networking_defs.sh
 
-rm -rf $SCRIPTS_LOCKDIR
+rm -rf "$SCRIPTS_LOCKDIR"
 
 # Enable forwarding
 echo 1 > /proc/sys/net/ipv4/ip_forward
