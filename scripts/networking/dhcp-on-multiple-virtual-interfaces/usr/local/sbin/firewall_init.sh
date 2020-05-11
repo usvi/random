@@ -12,11 +12,8 @@
 /sbin/iptables -t nat -X
 
 #Drop everything by default
-#/sbin/iptables -P INPUT DROP
-#/sbin/iptables -P FORWARD DROP
-# Temporarily allowing as part of debugging
-/sbin/iptables -P INPUT ACCEPT
-/sbin/iptables -P FORWARD ACCEPT
+/sbin/iptables -P INPUT DROP
+/sbin/iptables -P FORWARD DROP
 
 #Allow outputs
 /sbin/iptables -P OUTPUT ACCEPT
