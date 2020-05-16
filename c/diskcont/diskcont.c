@@ -8,8 +8,11 @@
 #include <sys/ioctl.h>
 #include <linux/fs.h>
 #include <time.h>
+#include <sys/time.h>
 
 // gcc -D_FILE_OFFSET_BITS=64 -Wall -o diskcont diskcont.c
+
+#define DC_VERSION_STR "Diskcont v. 1.01 by Janne Paalijarvi\n"
 
 #define DC_GEN_BUF_SIZE ((uint32_t)(2000))
 
@@ -17,6 +20,9 @@
 #define DC_BUF_SIZE_KIBIBYTE (((uint32_t)(128)) * DC_RUNNING_NUM_SIZE_BYTES)
 #define DC_BUF_SIZE_MEBIBYTE (((uint32_t)(1024)) * DC_BUF_SIZE_KIBIBYTE)
 #define DC_BUF_SIZE_COMPLETE (((uint32_t)(100)) * DC_BUF_SIZE_MEBIBYTE)
+
+#define DC_PROGRESS_UPDATE_INTERVAL ((uint32_t)(5))
+
 
 typedef struct
 {
@@ -27,6 +33,7 @@ typedef struct
   uint64_t u64DevSizeBytes;
   
 } tDcState;
+
 
 
 static uint8_t bDC_GetParams(int argc, char* argv[], tDcState* pxState)
@@ -82,7 +89,8 @@ static uint8_t bDC_GetParams(int argc, char* argv[], tDcState* pxState)
 
   if ((strcmp(argv[argc - 1], "-r") == 0) ||
       (strcmp(argv[argc - 1], "-w") == 0) ||
-      (strcmp(argv[argc - 1], "-s") == 0))
+      (strcmp(argv[argc - 1], "-s") == 0) ||
+      (strncmp(argv[argc - 1], "-", 1) == 0))
   {
     // No device given
     return 0;
@@ -133,34 +141,48 @@ static void DC_PrepareBuffer(void* pBufMem,
 }
 
 
-static void DC_PrintProgress(uint64_t u64PassedBytes,
-			     uint64_t u64FinalSize,
-			     time_t tPassedTime)
+
+static void DC_PrintProgress(uint64_t u64LastDataBytesLeft,
+			     uint64_t u64NowDataBytesLeft,
+			     uint64_t u64DevSizeBytes,
+			     struct timeval* pxStartTime,
+			     struct timeval* pxLastTime,
+			     struct timeval* pxNowTime)
 {
+  // Staticed here just for efficiency
   static uint32_t u32TimeElapsed;
   static uint32_t u32Secs;
   static uint32_t u32Mins;
   static uint32_t u32Hours;
+  static uint64_t u64PassedBytes;
   static float fProgress;
-
-  u32TimeElapsed = tPassedTime;
+  static float fTimeElapsedFine;
+  static float fSpeedMbPerSeconds;
+  
+  u32TimeElapsed = pxNowTime->tv_sec - pxStartTime->tv_sec;
   u32Secs = u32TimeElapsed % 60;
   u32TimeElapsed -= u32Secs;
   u32Mins = (u32TimeElapsed % 3600) / 60;
   u32TimeElapsed -= u32Mins * 60;
   u32Hours = u32TimeElapsed / 3600;
+  u64PassedBytes = u64DevSizeBytes - u64NowDataBytesLeft;
+  fProgress = 100.0 * (1.0 * u64PassedBytes) / (1.0 * u64DevSizeBytes);
 
-  fProgress = 100.0 * ((float)(u64PassedBytes)) / ((float)(u64FinalSize));
+  // For calculations we need fine-grained stuff.
+  fSpeedMbPerSeconds = 0.0;
+  
+  if (timercmp(pxLastTime, pxNowTime, <) && (u64LastDataBytesLeft))
+  {
+    fTimeElapsedFine = (1.0 * (pxNowTime->tv_sec - pxLastTime->tv_sec)) + (0.000001 * (pxNowTime->tv_usec - pxLastTime->tv_usec));
+    fSpeedMbPerSeconds = (1.0 * (u64LastDataBytesLeft - u64NowDataBytesLeft)) / ((1.0 * DC_BUF_SIZE_MEBIBYTE) * fTimeElapsedFine);
+  }
 
-
-  printf("\rAt position %" PRIu64 " bytes / %" PRIu64 " bytes, %02.2f%%, "
-	 "elapsed time: %uh %02um %02us",
-	 u64PassedBytes, u64FinalSize, fProgress,
-	 u32Hours, u32Mins, u32Secs);
+  printf("\r%" PRIu64 "/%" PRIu64 " bytes, %02.2f%% done. "
+	 "%uh %02um %02us elapsed. Speed now: %.2f MiB/s         \r",
+	 u64PassedBytes, u64DevSizeBytes, fProgress,
+	 u32Hours, u32Mins, u32Secs, fSpeedMbPerSeconds);
   fflush(stdout);
 }
-
-
 
 
 
@@ -169,18 +191,21 @@ static uint8_t bDC_ReadTest(tDcState* pxState)
   void* pCompBufMem = NULL;
   void* pReadBufMem = NULL;
   int iFd = -1;
-  time_t tStartTime;
-  time_t tLastTime;
-  time_t tNowTime;
+  struct timeval xStartTime;
+  struct timeval xLastTime;
+  struct timeval xNowTime;
   uint64_t u64DataLeftBytes = pxState->u64DevSizeBytes;
+  uint64_t u64LastDataLeftBytes = 0;
   uint64_t u64ReadNumber = 0;
   uint64_t u64BufferUsedDataBytes = 0;
   uint64_t u64BufferUsedNumbers = 0;
   uint64_t u64ReadCallBytes = 0;
 
-  tStartTime = time(NULL);
-  tLastTime = time(NULL) - 5; // Ensure at least 5 print
-
+  // No return value checking for performance purposes
+  gettimeofday(&xStartTime, NULL);
+  gettimeofday(&xLastTime, NULL);
+  xLastTime.tv_sec -= (DC_PROGRESS_UPDATE_INTERVAL + 1); // Ensure at least one print
+  
   
   pCompBufMem = malloc(DC_BUF_SIZE_COMPLETE);
 
@@ -236,7 +261,8 @@ static uint8_t bDC_ReadTest(tDcState* pxState)
     // Compare buffers
     if (memcmp(pCompBufMem, pReadBufMem, u64BufferUsedDataBytes) != 0)
     {
-      printf("\nError: Comparing failed at byte %" PRIu64 "\n",
+      // TODO: Find out which byte exactly.
+      printf("\nError: Comparing failed at block beginning at %" PRIu64 "\n",
 	     (pxState->u64DevSizeBytes - u64DataLeftBytes));
       free(pCompBufMem);
       free(pReadBufMem);
@@ -244,23 +270,23 @@ static uint8_t bDC_ReadTest(tDcState* pxState)
     
       return 0;
     }
-    
     u64DataLeftBytes -= u64BufferUsedDataBytes;
     u64ReadNumber += u64BufferUsedNumbers;
 
-    // Write where we are, if 5 seconds passed
-    tNowTime = time(NULL);
+    // Write where we are, if interval seconds passed
+    gettimeofday(&xNowTime, NULL);
 
-    if (tNowTime > (tLastTime + 4))
+    if ((xLastTime.tv_sec + DC_PROGRESS_UPDATE_INTERVAL) < xNowTime.tv_sec)
     {
-      DC_PrintProgress((pxState->u64DevSizeBytes - u64DataLeftBytes),
-		       pxState->u64DevSizeBytes, (tNowTime - tStartTime));
-      tLastTime = tNowTime;
+      DC_PrintProgress(u64LastDataLeftBytes, u64DataLeftBytes, pxState->u64DevSizeBytes,
+		       &xStartTime, &xLastTime, &xNowTime);
+      u64LastDataLeftBytes = u64DataLeftBytes;
+      xLastTime = xNowTime;
     }
   }
-  tNowTime = time(NULL);
-  DC_PrintProgress((pxState->u64DevSizeBytes - u64DataLeftBytes),
-		   pxState->u64DevSizeBytes, (tNowTime - tStartTime));
+  gettimeofday(&xNowTime, NULL);
+  DC_PrintProgress(u64LastDataLeftBytes, u64DataLeftBytes, pxState->u64DevSizeBytes,
+		   &xStartTime, &xLastTime, &xNowTime);
   printf("\nDone reading, compare OK!\n");
   
   free(pCompBufMem);
@@ -272,24 +298,23 @@ static uint8_t bDC_ReadTest(tDcState* pxState)
 
 
 
-
-
 static uint8_t bDC_WriteTest(tDcState* pxState)
 {
   void* pBufMem = NULL;
   int iFd = -1;
-  time_t tStartTime;
-  time_t tLastTime;
-  time_t tNowTime;
+  struct timeval xStartTime;
+  struct timeval xLastTime;
+  struct timeval xNowTime;
   uint64_t u64DataLeftBytes = pxState->u64DevSizeBytes;
+  uint64_t u64LastDataLeftBytes = 0;
   uint64_t u64WriteNumber = 0;
   uint64_t u64BufferUsedDataBytes = 0;
   uint64_t u64BufferUsedNumbers = 0;
   uint64_t u64WrittenCallBytes = 0;
 
-  tStartTime = time(NULL);
-  tLastTime = time(NULL) - 5; // Ensure at least 5 print
-
+  gettimeofday(&xStartTime, NULL);
+  gettimeofday(&xLastTime, NULL);
+  xLastTime.tv_sec -= (DC_PROGRESS_UPDATE_INTERVAL + 1); // Ensure at least one print
   
   pBufMem = malloc(DC_BUF_SIZE_COMPLETE);
 
@@ -333,19 +358,20 @@ static uint8_t bDC_WriteTest(tDcState* pxState)
     u64DataLeftBytes -= u64BufferUsedDataBytes;
     u64WriteNumber += u64BufferUsedNumbers;
 
-    // Write where we are, if 5 seconds passed
-    tNowTime = time(NULL);
+    // Write where we are, if interval seconds passed
+    gettimeofday(&xNowTime, NULL);
 
-    if (tNowTime > (tLastTime + 4))
+    if ((xLastTime.tv_sec + DC_PROGRESS_UPDATE_INTERVAL) < xNowTime.tv_sec)
     {
-      DC_PrintProgress((pxState->u64DevSizeBytes - u64DataLeftBytes),
-		       pxState->u64DevSizeBytes, (tNowTime - tStartTime));
-      tLastTime = tNowTime;
+      DC_PrintProgress(u64LastDataLeftBytes, u64DataLeftBytes, pxState->u64DevSizeBytes,
+		       &xStartTime, &xLastTime, &xNowTime);
+      u64LastDataLeftBytes = u64DataLeftBytes;
+      xLastTime = xNowTime;
     }
   }
-  tNowTime = time(NULL);
-  DC_PrintProgress((pxState->u64DevSizeBytes - u64DataLeftBytes),
-		   pxState->u64DevSizeBytes, (tNowTime - tStartTime));
+  gettimeofday(&xNowTime, NULL);
+  DC_PrintProgress(u64LastDataLeftBytes, u64DataLeftBytes, pxState->u64DevSizeBytes,
+		   &xStartTime, &xLastTime, &xNowTime);
   printf("\nSyncinc...\n");
   fsync(iFd);
   printf("Done all writing!\n");
@@ -365,6 +391,8 @@ int main(int argc, char* argv[])
   int iTemp = 0;
   tDcState xState;
   char sReadBuf[DC_GEN_BUF_SIZE] = { 0 };
+
+  printf(DC_VERSION_STR);
   
   if (!bDC_GetParams(argc, argv, &xState))
   {
