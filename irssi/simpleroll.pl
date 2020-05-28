@@ -68,7 +68,7 @@ sub check_input
     my $temp_channel = $_[4];
     my $temp_network = $temp_server->{tag};
     my $digit_count = $digit_count_default;
-    
+
     if (index($temp_message, $roll_trigger_default) == 0)
     {
 	# We might have:
@@ -125,5 +125,19 @@ sub check_input
     }
 }
 
-Irssi::signal_add_last("message public", "check_input");
-Irssi::signal_add_last("message private", "check_input");
+sub check_input_public
+{
+    # Public has channel, so just passtrough
+    return check_input(@_);
+}
+
+sub check_input_private
+{
+    # Private has no channel, so delete target so our general
+    # handler knows the difference.
+    $_[4] = "";
+    return check_input(@_);
+}
+
+Irssi::signal_add_last("message public", "check_input_public");
+Irssi::signal_add_last("message private", "check_input_private");
