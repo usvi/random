@@ -440,13 +440,27 @@ sub do_housekeeping
     activate_next_timer();
 }
 
+sub check_for_commands_public
+{
+    # Public has channel, so just passtrough
+    return  check_for_commands(@_);
+}
+
+sub check_for_commands_private
+{
+    # Private has no channel, so delete target so our general
+    # handler knows the difference.
+    $_[4] = "";
+    return  check_for_commands(@_);
+}
+
 Irssi::timeout_add($housekeeping_period_msecs, "do_housekeeping", "");
 
 Irssi::command_bind("stload", "load_timers");
 Irssi::command_bind("stprint", "list_timers");
 
-Irssi::signal_add_last("message public", "check_for_commands");
-Irssi::signal_add_last("message private", "check_for_commands");
+Irssi::signal_add_last("message public", "check_for_commands_public");
+Irssi::signal_add_last("message private", "check_for_commands_private");
 
 load_timers();
 activate_next_timer();
