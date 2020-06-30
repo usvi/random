@@ -13,9 +13,9 @@ $ua->timeout(10);
 #2019-08-18: Added new agent to pass Cloudflare anti-ddos measures.
 #$ua->agent("Wget/1.17.1 (linux-gnu)");
 $ua->agent("Omaropotti/1.0 (linux-gnu)");
+#2020-06-30: Stupid twitter fixes
 
-
-$VERSION = '0.4';
+$VERSION = '0.5';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -23,7 +23,7 @@ $VERSION = '0.4';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Sun Dec 29 22:41:59 EET 2019'
+ changed     => 'Tue 30 Jun 2020 11:30:54 PM EEST'
 );
 
 my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
@@ -31,6 +31,16 @@ my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateI
 sub get_title
 {
 	my $url = $_[0];
+	my $twitter = 0;
+
+	if (index($url, "https://twitter.com") == 0)
+	{
+	    $url = substr($url, length("https://twitter.com"));
+	    $url = "https://nitter.net" . $url;
+	    $twitter = 1;
+	}
+	print("Using " . $url);
+
 	my $response = $ua->head($url,
 	    'Accept' => 'text/html');
 
@@ -38,15 +48,18 @@ sub get_title
 	{
 		return "";
 	}
-	my $html = $ua->get($url)->content();
-	#my ($title) = $html =~ m/<\s*title\s*>([^>]+)<\s*\/\s*title\s*>/gsi;
-	#my ($title) = $html =~ m/<\s*title[^>]*>(.+)<\s*\/\s*title/gsi;
-	my ($title) = $html =~ m/<\s*title[^>]*>(.+)<\s*\/\s*title/gi;
+	$response = $ua->get($url);
+
+	if(!($response->is_success()))
+	{
+		return "";
+	}
+	my $title = $response->title();
 	$title = decode_entities($title);
 	$title =~ s/\s+/ /g;
 	$title =~ s/^\s+|\s+$//g;
 	
-	if((length($title) > 0) and (length($title) < 350))
+	if((length($title) > 0) and (length($title) < ($twitter ? 550 : 350)))
 	{
 		return "Title: " . $title;
 	}
