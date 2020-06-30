@@ -39,7 +39,6 @@ sub get_title
 	    $url = "https://nitter.net" . $url;
 	    $twitter = 1;
 	}
-	print("Using " . $url);
 
 	my $response = $ua->head($url,
 	    'Accept' => 'text/html');
