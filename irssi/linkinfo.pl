@@ -15,8 +15,10 @@ $ua->timeout(10);
 $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-06-30: Stupid twitter fixes
 #2020-07-05: Fallback title tag parsing if built-in fails
+#2020-07-05: Stupid youtube fixes. Please, stop being dicks, ok?
 
-$VERSION = '0.5.1';
+
+$VERSION = '0.5.2';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -24,7 +26,7 @@ $VERSION = '0.5.1';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Mon 06 Jul 2020 12:27:12 AM EEST'
+ changed     => 'Mon 06 Jul 2020 12:44:35 AM EEST'
 );
 
 my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
@@ -32,13 +34,19 @@ my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateI
 sub get_title
 {
     my $url = $_[0];
-    my $twitter = 0;
+    my $extra = 0;
     
     if (index($url, "https://twitter.com") == 0)
     {
 	$url = substr($url, length("https://twitter.com"));
 	$url = "https://nitter.net" . $url;
-	$twitter = 1;
+	$extra = 1;
+    }
+    if (index($url, "https://www.youtube.com") == 0)
+    {
+	$url = substr($url, length("https://www.youtube.com"));
+	$url = "https://invidio.us" . $url;
+	$extra = 1;
     }
     
     my $response = $ua->head($url,
@@ -69,7 +77,7 @@ sub get_title
 	$title =~ s/^\s+|\s+$//g;
     }
     
-    if((length($title) > 0) and (length($title) < ($twitter ? 550 : 350)))
+    if((length($title) > 0) and (length($title) < ($extra ? 550 : 350)))
     {
 	return "Title: " . $title;
     }
