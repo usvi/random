@@ -16,17 +16,17 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-06-30: Stupid twitter fixes
 #2020-07-05: Fallback title tag parsing if built-in fails
 #2020-07-05: Stupid youtube fixes. Please, stop being dicks, ok?
+#2020-07-06: Youtube engineers, why the fuck do you do this? Yet another fix.
 
-
-$VERSION = '0.5.2';
+$VERSION = '0.5.3';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
- contact     => 'usv@IRCnet',
+ contact     => 'usvi@IRCnet',
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Mon 06 Jul 2020 12:44:35 AM EEST'
+ changed     => 'Mon 06 Jul 2020 09:50:32 PM EEST'
 );
 
 my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
@@ -45,6 +45,12 @@ sub get_title
     if (index($url, "https://www.youtube.com") == 0)
     {
 	$url = substr($url, length("https://www.youtube.com"));
+	$url = "https://invidio.us" . $url;
+	$extra = 1;
+    }
+    if (index($url, "https://youtu.be") == 0)
+    {
+	$url = substr($url, length("https://youtu.be"));
 	$url = "https://invidio.us" . $url;
 	$extra = 1;
     }
