@@ -67,6 +67,7 @@ then
     done
     # Use specific lookup table for interface 1
     ip rule add from "$ADDR_PRIV1" lookup "$IF_PUB1"
+    ip rule add oif "$IF_PUB1" lookup "$IF_PUB1"
     # But use main lookup table for LAN stuff
     ip rule add from "$ADDR_PRIV1" to "$RANGE_LAN" lookup main
 fi
@@ -79,6 +80,7 @@ then
     done
     # Use specific lookup table for interface 2
     ip rule add from "$ADDR_PRIV2" lookup "$IF_PUB2"
+    ip rule add oif "$IF_PUB2" lookup "$IF_PUB2"
     # But use main lookup table for LAN stuff
     ip rule add from "$ADDR_PRIV2" to "$RANGE_LAN" lookup main
 fi
