@@ -17,8 +17,9 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-07-05: Fallback title tag parsing if built-in fails
 #2020-07-05: Stupid youtube fixes. Please, stop being dicks, ok?
 #2020-07-06: Youtube engineers, why the fuck do you do this? Yet another fix.
+#2020-07-27: Adding soft hyphen remover.
 
-$VERSION = '0.5.3';
+$VERSION = '0.5.4';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -26,7 +27,7 @@ $VERSION = '0.5.3';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Mon 06 Jul 2020 09:50:32 PM EEST'
+ changed     => 'Mon 27 Jul 2020 08:44:30 PM EEST'
 );
 
 my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
@@ -82,8 +83,12 @@ sub get_title
 	$title =~ s/\s+/ /g;
 	$title =~ s/^\s+|\s+$//g;
     }
+    if ((length($title) > 0))
+    {
+	$title =~ tr/\xAD//d;
+    }
     
-    if((length($title) > 0) and (length($title) < ($extra ? 550 : 350)))
+    if ((length($title) > 0) and (length($title) < ($extra ? 550 : 350)))
     {
 	return "Title: " . $title;
     }
