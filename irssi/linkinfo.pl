@@ -85,7 +85,7 @@ sub get_title
     }
     if ((length($title) > 0))
     {
-	$title =~ tr/\xAD//d;
+	$title =~ s/\xC2?\xAD//g;
     }
     
     if ((length($title) > 0) and (length($title) < ($extra ? 550 : 350)))
