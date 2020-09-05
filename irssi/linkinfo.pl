@@ -18,8 +18,9 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-07-05: Stupid youtube fixes. Please, stop being dicks, ok?
 #2020-07-06: Youtube engineers, why the fuck do you do this? Yet another fix.
 #2020-07-27: Adding soft hyphen remover.
+#2020-09-05: Another invidious host
 
-$VERSION = '0.5.4';
+$VERSION = '0.5.5';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -27,7 +28,7 @@ $VERSION = '0.5.4';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Mon 27 Jul 2020 08:44:30 PM EEST'
+ changed     => 'Sat 05 Sep 2020 08:32:08 AM EEST'
 );
 
 my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
@@ -46,13 +47,13 @@ sub get_title
     if (index($url, "https://www.youtube.com") == 0)
     {
 	$url = substr($url, length("https://www.youtube.com"));
-	$url = "https://invidio.us" . $url;
+	$url = "https://invidious.snopyta.org" . $url;
 	$extra = 1;
     }
     if (index($url, "https://youtu.be") == 0)
     {
 	$url = substr($url, length("https://youtu.be"));
-	$url = "https://invidio.us" . $url;
+	$url = "https://invidious.snopyta.org" . $url;
 	$extra = 1;
     }
     
