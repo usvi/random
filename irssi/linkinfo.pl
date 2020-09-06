@@ -8,6 +8,7 @@ use Encode;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
+$ua->max_size(500000);
 #2019-08-17: Commented out so LWP does not try to load too fancy stuff
 #$ua->agent("Mozilla/5.0 (X11; Linux x86_64; rv:29.0) Gecko/20100101 Firefox/29.0 SeaMonkey/2.26.1");
 #2019-08-18: Added new agent to pass Cloudflare anti-ddos measures.
@@ -19,8 +20,9 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-07-06: Youtube engineers, why the fuck do you do this? Yet another fix.
 #2020-07-27: Adding soft hyphen remover.
 #2020-09-05: Another invidious host
+#2020-09-06: Disabled invidious, instead set maximum size of response to 500kb => problem solved for YT
 
-$VERSION = '0.5.5';
+$VERSION = '0.5.6';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -28,7 +30,7 @@ $VERSION = '0.5.5';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Sat 05 Sep 2020 08:32:08 AM EEST'
+ changed     => 'Sun 06 Sep 2020 03:49:52 PM EEST'
 );
 
 my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
@@ -44,19 +46,6 @@ sub get_title
 	$url = "https://nitter.net" . $url;
 	$extra = 1;
     }
-    if (index($url, "https://www.youtube.com") == 0)
-    {
-	$url = substr($url, length("https://www.youtube.com"));
-	$url = "https://invidious.snopyta.org" . $url;
-	$extra = 1;
-    }
-    if (index($url, "https://youtu.be") == 0)
-    {
-	$url = substr($url, length("https://youtu.be"));
-	$url = "https://invidious.snopyta.org" . $url;
-	$extra = 1;
-    }
-    
     my $response = $ua->head($url,
 			     'Accept' => 'text/html');
     
