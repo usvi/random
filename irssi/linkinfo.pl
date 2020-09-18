@@ -21,8 +21,10 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-07-27: Adding soft hyphen remover.
 #2020-09-05: Another invidious host
 #2020-09-06: Disabled invidious, instead set maximum size of response to 500kb => problem solved for YT
+#2020-09-18: Modified blacklist
 
-$VERSION = '0.5.6';
+
+$VERSION = '0.5.7';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -30,10 +32,10 @@ $VERSION = '0.5.6';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Sun 06 Sep 2020 03:49:52 PM EEST'
+ changed     => 'Fri 18 Sep 2020 06:46:20 PM EEST'
 );
 
-my $no_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC ";
+my $blacklist_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC #otaniemi/IRCnet ";
 
 sub get_title
 {
@@ -95,7 +97,7 @@ sub check_for_urls
     my $temp_nick = $_[2];
     my $temp_channel = lc($_[4]);
     
-    if(!(index(" " . lc($no_chans) . " ", " " . lc($temp_channel) . "/" . lc($temp_server->{tag}) ." ") != -1))
+    if(!(index(" " . lc($blacklist_chans) . " ", " " . lc($temp_channel) . "/" . lc($temp_server->{tag}) ." ") != -1))
     {
 	#my @url_tokens = ($temp_message =~ m/([k]{0,1}http[s]{0,1}\:\/\/.*?[^( )\t]*).*?/ig);
 	my @url_tokens = ($temp_message =~ m/(http[s]{0,1}\:\/\/.*?[^( )\t]*).*?/ig);
