@@ -22,9 +22,9 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-09-05: Another invidious host
 #2020-09-06: Disabled invidious, instead set maximum size of response to 500kb => problem solved for YT
 #2020-09-18: Modified blacklist
+#2020-01-30: Added whitelist support for twitter, reversed order of chan and net.
 
-
-$VERSION = '0.5.7';
+$VERSION = '0.6.0';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -35,11 +35,15 @@ $VERSION = '0.5.7';
  changed     => 'Fri 18 Sep 2020 06:46:20 PM EEST'
 );
 
-my $blacklist_chans .= " #piraattipuolue/IRCnet #sivusto/PirateIRC #keski-suomi/PirateIRC #helsinki/PirateIRC #toiminta/PirateIRC #uusimaa/PirateIRC #piraattinuoret/PirateIRC #piraattipuolue/PirateIRC #otaniemi/IRCnet ";
+my $blacklist_chans .= " IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi ";
+
+my $whitelist_twitter_chans .= " IRCnet/#otaniemi "; 
 
 sub get_title
 {
     my $url = $_[0];
+    my $blacklisted = $_[1];
+    my $net_channel = $_[2];
     my $extra = 0;
     
     if (index($url, "https://twitter.com") == 0)
@@ -47,7 +51,22 @@ sub get_title
 	$url = substr($url, length("https://twitter.com"));
 	$url = "https://nitter.net" . $url;
 	$extra = 1;
+
+	if ($blacklisted)
+	{
+	    # Check if in twitter whitelist still
+	    if (index(" " . lc($whitelist_twitter_chans) . " ", " " . $net_channel . " ") != -1)
+	    {
+		$blacklisted = 0;
+	    }
+	}
     }
+    # Still blacklisted? Don't return anything.
+    if ($blacklisted)
+    {
+	return "";
+    }
+
     my $response = $ua->head($url,
 			     'Accept' => 'text/html');
     
@@ -96,8 +115,15 @@ sub check_for_urls
     my $temp_message = $_[1];
     my $temp_nick = $_[2];
     my $temp_channel = lc($_[4]);
+
+    my $temp_blacklisted = 0;
+    my $temp_net_channel = lc($temp_server->{tag}) . "/" . lc($temp_channel) . "";
+
+    if (index(" " . lc($blacklist_chans) . " ", " " . $temp_net_channel . " ") != -1)
+    {
+	$temp_blacklisted = 1;
+    }
     
-    if(!(index(" " . lc($blacklist_chans) . " ", " " . lc($temp_channel) . "/" . lc($temp_server->{tag}) ." ") != -1))
     {
 	#my @url_tokens = ($temp_message =~ m/([k]{0,1}http[s]{0,1}\:\/\/.*?[^( )\t]*).*?/ig);
 	my @url_tokens = ($temp_message =~ m/(http[s]{0,1}\:\/\/.*?[^( )\t]*).*?/ig);
@@ -110,8 +136,8 @@ sub check_for_urls
 		if(length($return_string) > 0)
 		{
 		    $return_string .= " | ";
-				}
-		my $temp_title = get_title($_);
+		}
+		my $temp_title = get_title($_, $temp_blacklisted, $temp_net_channel);
 		
 		if(utf8::is_utf8($temp_title))
 		{
