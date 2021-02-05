@@ -8,7 +8,7 @@ use Encode;
 use URI;
 
 my $ua = LWP::UserAgent->new;
-$ua->timeout(20);
+$ua->timeout(15);
 $ua->max_size(500000);
 #2019-08-17: Commented out so LWP does not try to load too fancy stuff
 #$ua->agent("Mozilla/5.0 (X11; Linux x86_64; rv:29.0) Gecko/20100101 Firefox/29.0 SeaMonkey/2.26.1");
@@ -27,7 +27,7 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-02-05: Fuck you twitter. Now I'm getting your stupid title via Selenium.
 
 
-$VERSION = '0.7.1';
+$VERSION = '0.7.2';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -35,7 +35,7 @@ $VERSION = '0.7.1';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Fri 05 Feb 2021 08:04:52 PM EET'
+ changed     => 'Fri 05 Feb 2021 08:37:52 PM EET'
 );
 
 my $blacklist_chans .= " IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi ";
@@ -67,7 +67,6 @@ sub get_title
 	}
 	# Redirect url
 	$url = "http://172.16.8.168:9001/" . $url;
-	print("created URL: " . $url);
 
 	if ($blacklisted)
 	{
