@@ -8,7 +8,7 @@ use Encode;
 use URI;
 
 my $ua = LWP::UserAgent->new;
-$ua->timeout(10);
+$ua->timeout(20);
 $ua->max_size(500000);
 #2019-08-17: Commented out so LWP does not try to load too fancy stuff
 #$ua->agent("Mozilla/5.0 (X11; Linux x86_64; rv:29.0) Gecko/20100101 Firefox/29.0 SeaMonkey/2.26.1");
@@ -27,7 +27,7 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-02-05: Fuck you twitter. Now I'm getting your stupid title via Selenium.
 
 
-$VERSION = '0.7.0';
+$VERSION = '0.7.1';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -35,7 +35,7 @@ $VERSION = '0.7.0';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Fri 05 Feb 2021 07:20:52 PM EET'
+ changed     => 'Fri 05 Feb 2021 08:04:52 PM EET'
 );
 
 my $blacklist_chans .= " IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi ";
@@ -47,12 +47,16 @@ sub get_title
     my $url = $_[0];
     my $blacklisted = $_[1];
     my $net_channel = $_[2];
-    my $extra = 0;
 
+    my $use_selenium = 0;
+    my $response;
+    my $title = "";
     my $url_uri = URI->new($url);
 
     if ('twitter.com' eq substr $url_uri->host, -length('twitter.com'))
     {
+	$use_selenium = 1;
+	
 	if ($blacklisted)
 	{
 	    # Check if in twitter whitelist still
@@ -63,6 +67,7 @@ sub get_title
 	}
 	# Redirect url
 	$url = "http://172.16.8.168:9001/" . $url;
+	print("created URL: " . $url);
 
 	if ($blacklisted)
 	{
@@ -73,27 +78,39 @@ sub get_title
 	    }
 	}
     }
-
     # Still blacklisted? Don't return anything.
     if ($blacklisted)
     {
 	return "";
     }
+    if ($use_selenium)
+    {
 
-    my $response = $ua->head($url,
-			     'Accept' => 'text/html');
-    
-    if($response->is_success() && !($response->content_type() eq "text/html"))
-    {
-	return "";
+	$response = $ua->get($url);
+	
+	if(!($response->is_success()))
+	{
+	    return "";
+	}
+	$title = $response->decoded_content;
     }
-    $response = $ua->get($url);
-    
-    if(!($response->is_success()))
+    else
     {
-	return "";
+	$response = $ua->head($url,
+			      'Accept' => 'text/html');
+    
+	if($response->is_success() && !($response->content_type() eq "text/html"))
+	{
+	    return "";
+	}
+	$response = $ua->get($url);
+    
+	if(!($response->is_success()))
+	{
+	    return "";
+	}
+	$title = $response->title();
     }
-    my $title = $response->title();
     $title = decode_entities($title);
     $title =~ s/\s+/ /g;
     $title =~ s/^\s+|\s+$//g;
@@ -112,7 +129,7 @@ sub get_title
 	$title =~ s/\xC2?\xAD//g;
     }
     
-    if ((length($title) > 0) and (length($title) < ($extra ? 550 : 350)))
+    if ((length($title) > 0) and (length($title) < 1000 ))
     {
 	return "Title: " . $title;
     }
