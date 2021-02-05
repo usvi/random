@@ -1,5 +1,13 @@
 #!/usr/bin/python3
 
+#
+# sudo apt-get install python3-pyvirtualdisplay
+# sudo apt-get install python3-selenium
+# sudo apt-get install firefox-geckodriver
+#
+# python3 simple_title_server.py
+# Wget http://172.16.8.168:9001/https://twitter.com/Yrtithepreaa/status/1357623427176235008
+
 from pyvirtualdisplay import Display
 from selenium import webdriver
 import time
@@ -24,7 +32,7 @@ def get_title(url):
     if parsed_url.hostname.endswith("twitter.com"):
         title = browser.title
         tries = 0
-        while tries < 6 and ":" not in title:
+        while tries < 6 and len(title) < 16:
             tries = tries + 1
             time.sleep(1)
             title = browser.title
@@ -42,7 +50,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         url = self.path
         url = url[1:]
         title = get_title(url)
+        #self.wfile.write(bytes('<!DOCTYPE HTML><html lang="en"><head><title>' + title +
+        #                       '</title></head><body>' + title + '</body></html>', 'utf-8'))
         self.wfile.write(bytes(title, 'utf-8'))
+        print('Served ' + self.path)
 
 httpd = socketserver.TCPServer(('', 9001), Handler)
 
