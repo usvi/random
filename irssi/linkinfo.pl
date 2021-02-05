@@ -5,6 +5,7 @@ use LWP::UserAgent;
 use HTML::Entities;
 use utf8;
 use Encode;
+use URI;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
@@ -23,8 +24,10 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-09-06: Disabled invidious, instead set maximum size of response to 500kb => problem solved for YT
 #2020-09-18: Modified blacklist
 #2020-01-30: Added whitelist support for twitter, reversed order of chan and net.
+#2020-02-05: Fuck you twitter. Now I'm getting your stupid title via Selenium.
 
-$VERSION = '0.6.0';
+
+$VERSION = '0.7.0';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -32,7 +35,7 @@ $VERSION = '0.6.0';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Fri 18 Sep 2020 06:46:20 PM EEST'
+ changed     => 'Fri 05 Feb 2021 07:20:52 PM EET'
 );
 
 my $blacklist_chans .= " IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi ";
@@ -45,13 +48,11 @@ sub get_title
     my $blacklisted = $_[1];
     my $net_channel = $_[2];
     my $extra = 0;
-    
-    if (index($url, "https://twitter.com") == 0)
-    {
-	$url = substr($url, length("https://twitter.com"));
-	$url = "https://nitter.net" . $url;
-	$extra = 1;
 
+    my $url_uri = URI->new($url);
+
+    if ('twitter.com' eq substr $url_uri->host, -length('twitter.com'))
+    {
 	if ($blacklisted)
 	{
 	    # Check if in twitter whitelist still
@@ -60,7 +61,19 @@ sub get_title
 		$blacklisted = 0;
 	    }
 	}
+	# Redirect url
+	$url = "http://172.16.8.168:9001/" . $url;
+
+	if ($blacklisted)
+	{
+	    # Check if in twitter happens to be in whitelist
+	    if (index(" " . lc($whitelist_twitter_chans) . " ", " " . $net_channel . " ") != -1)
+	    {
+		$blacklisted = 0;
+	    }
+	}
     }
+
     # Still blacklisted? Don't return anything.
     if ($blacklisted)
     {
