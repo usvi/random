@@ -1,20 +1,22 @@
-//
-//
-// Usage:
-// gcc -Wall -g whitelist_ip_sshguard.c -o whitelist_ip_sshguard
-// As root:
-// cp whitelist_ip_sshguard /usr/local/sbin
-// chown root:root /usr/local/sbin/whitelist_ip_sshguard
-// chmod u+s /usr/local/sbin/whitelist_ip_sshguard
-//
-// As user
-// Add to .basrc or similiar:
-//
-// if [ -n "$SSH_CLIENT" ];
-// then
-//   /usr/local/sbin/whitelist_ip_sshguard
-// fi
-//
+/*
+
+Usage:
+gcc -Wall -g whitelist_ip_sshguard.c -o whitelist_ip_sshguard
+As root:
+cp whitelist_ip_sshguard /usr/local/sbin
+chown root:root /usr/local/sbin/whitelist_ip_sshguard
+chmod u+s /usr/local/sbin/whitelist_ip_sshguard
+
+As user
+Add to .basrc or similiar:
+
+
+if [ -n "$SSH_CLIENT" ];
+then
+  /usr/local/sbin/whitelist_ip_sshguard
+fi
+
+*/
 
 #include <stdio.h>
 #include <string.h>
