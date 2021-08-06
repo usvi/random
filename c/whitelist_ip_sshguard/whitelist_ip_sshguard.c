@@ -12,22 +12,19 @@
 #define OP_OK 1
 #define OP_FAIL 0
 
-int whitelist_file_num_duplicates(char* sIpBuf);
-int whitelist_file_add(char* sIpBuf);
+int whitelist_file_num_duplicates(const char* sIpBuf, int* piDuplicates);
+int whitelist_file_add(const char* sIpBuf);
 
-int whitelist_file_num_duplicates(char* sIpBuf)
-{
-  
-}
-
-
-int whitelist_file_add(char* sIpBuf)
+int whitelist_file_num_duplicates(const char* sIpBuf, int* piDuplicates)
 {
   FILE* pWhiteFile = NULL;
   int iTemp = 0;
   int iErrors = 0;
-
-  pWhiteFile = fopen(SSHGUARD_WHITELIST_FILE, "a");
+  char sBuf[BUF_SIZE] = { 0 };
+  *piDuplicates = 0;
+  char* sPointer = NULL;
+  
+  pWhiteFile = fopen(SSHGUARD_WHITELIST_FILE, "r");
 
   if (pWhiteFile == NULL)
   {
@@ -45,6 +42,68 @@ int whitelist_file_add(char* sIpBuf)
   }
   if (iErrors == 0)
   {
+    while(!feof(pWhiteFile))
+    {
+      memset(sBuf, 0, BUF_SIZE);
+      fgets(sBuf, BUF_SIZE - 1, pWhiteFile);
+
+      // Remove trailing newline
+      sPointer = strstr(sBuf, "\n");
+
+      if (sPointer != NULL)
+      {
+	// Found, null it
+	*sPointer = 0;
+      }
+      // Now we can make comparison
+      if (strncmp(sBuf, sIpBuf, BUF_SIZE) == 0)
+      {
+	// Got it
+	(*piDuplicates)++;
+      }
+    }
+  }
+  if (iErrors == 0)
+  {
+    iTemp = flock(fileno(pWhiteFile), LOCK_UN);
+    fclose(pWhiteFile);
+  }
+
+  if (iErrors == 0)
+  {
+    // piDuplicates automatically incremented
+    
+    return OP_OK;
+  }
+
+  return OP_FAIL;
+}
+
+
+int whitelist_file_add(const char* sIpBuf)
+{
+  FILE* pWhiteFile = NULL;
+  int iTemp = 0;
+  int iErrors = 0;
+
+  pWhiteFile = fopen(SSHGUARD_WHITELIST_FILE, "a");
+
+  if (pWhiteFile == NULL)
+  {
+    iErrors++;
+  }
+  if (iErrors == 0)
+  {
+    iTemp = flock(fileno(pWhiteFile), LOCK_EX);
+
+    if (iTemp != 0)
+    {
+      fclose(pWhiteFile);
+      iErrors++;
+    }
+  }
+  if (iErrors == 0)
+  {
     iTemp = fprintf(pWhiteFile, "%s\n", sIpBuf);
 
     if (iTemp < 0)
@@ -53,7 +112,11 @@ int whitelist_file_add(char* sIpBuf)
       iErrors++;
     }
   }
-  fclose(pWhiteFile);
+  if (iErrors == 0)
+  {
+    iTemp = flock(fileno(pWhiteFile), LOCK_UN);
+    fclose(pWhiteFile);
+  }
 
   if (iErrors == 0)
   {
@@ -65,14 +128,18 @@ int whitelist_file_add(char* sIpBuf)
 
 int main(int argc, char *argv[])
 {
-  char sBuf[BUF_SIZE] = { 0 };
   char sIpBuf[BUF_SIZE] = { 0 };
   char* sPointer = NULL;
   struct sockaddr_in sa;
   int iTemp = 0;
   uid_t xOriginalUid = 0xDEADBEEF;
-  int iErrors = 0;
+  int iDuplicates = 0;
 
+  
+  //whitelist_file_num_duplicates("172.16.8.1" ,&iTemp);
+  //printf("Found %d\n", iTemp);
+  //whitelist_file_add("172.16.8.1");
+  
   // No arguments needed, getting it from environment variable
   // $SSH_CLIENT which has the following form for ipv4
   // 91.158.138.210 56232 22
@@ -120,13 +187,40 @@ int main(int argc, char *argv[])
   // to filelist. Should make a patch...
   xOriginalUid = getuid();
   setuid(0);
-
-  //iTemp = system(sBuf);
+  iTemp = whitelist_file_num_duplicates(sIpBuf ,&iDuplicates);
   setuid(xOriginalUid);
 
+  if (iTemp == OP_FAIL)
+  {
+    printf("%s : Unable to search duplicates from whitelist %s\n", argv[0], SSHGUARD_WHITELIST_FILE);
 
+    return 1;
+  }
 
+  if (iDuplicates > 0)
+  {
+    printf("%s : IP %s already in SshGuard whitelist %s\n", argv[0], sIpBuf, SSHGUARD_WHITELIST_FILE);
 
+    return 0;
+  }
+  if (iDuplicates == 0)
+  {
+    xOriginalUid = getuid();
+    setuid(0);
+    iTemp = whitelist_file_add(sIpBuf);
+    setuid(xOriginalUid);
+  }
+  if (iTemp == OP_FAIL)
+  {
+    printf("%s : Unable to add IP to whitelist %s\n", argv[0], SSHGUARD_WHITELIST_FILE);
+
+    return 1;
+  }
+  // If duplicates: already returned
+  // If failing to add: already returned
+  // Try restarting sshguard
+
+  iTemp = system(SSHGUARD_RESTART_PROC);
   
   if (iTemp == 0)
   {
@@ -140,7 +234,6 @@ int main(int argc, char *argv[])
 
     return 1;
   }
-      
     
   
 
