@@ -8,7 +8,7 @@ chown root:root /usr/local/sbin/whitelist_ip_sshguard
 chmod u+s /usr/local/sbin/whitelist_ip_sshguard
 
 As user
-Add to .basrc or similiar:
+Add to .bashrc or similiar:
 
 
 if [ -n "$SSH_CLIENT" ];
