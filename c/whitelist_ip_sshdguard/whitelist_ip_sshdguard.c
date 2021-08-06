@@ -4,10 +4,64 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/file.h>
 
-#define SSHGUARD_BINARY "/usr/sbin/sshguard"
-#define SSHGUARD_WHITELIST_SWITCH "-w"
+#define SSHGUARD_WHITELIST_FILE "/etc/sshguard/whitelist"
+#define SSHGUARD_RESTART_PROC "/usr/sbin/service sshguard restart"
 #define BUF_SIZE 256
+#define OP_OK 1
+#define OP_FAIL 0
+
+int whitelist_file_num_duplicates(char* sIpBuf);
+int whitelist_file_add(char* sIpBuf);
+
+int whitelist_file_num_duplicates(char* sIpBuf)
+{
+  
+}
+
+
+int whitelist_file_add(char* sIpBuf)
+{
+  FILE* pWhiteFile = NULL;
+  int iTemp = 0;
+  int iErrors = 0;
+
+  pWhiteFile = fopen(SSHGUARD_WHITELIST_FILE, "a");
+
+  if (pWhiteFile == NULL)
+  {
+    iErrors++;
+  }
+  if (iErrors == 0)
+  {
+    iTemp = flock(fileno(pWhiteFile), LOCK_SH);
+
+    if (iTemp != 0)
+    {
+      fclose(pWhiteFile);
+      iErrors++;
+    }
+  }
+  if (iErrors == 0)
+  {
+    iTemp = fprintf(pWhiteFile, "%s\n", sIpBuf);
+
+    if (iTemp < 0)
+    {
+      fclose(pWhiteFile);
+      iErrors++;
+    }
+  }
+  fclose(pWhiteFile);
+
+  if (iErrors == 0)
+  {
+    return OP_OK;
+  }
+
+  return OP_FAIL;
+}
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +71,7 @@ int main(int argc, char *argv[])
   struct sockaddr_in sa;
   int iTemp = 0;
   uid_t xOriginalUid = 0xDEADBEEF;
+  int iErrors = 0;
 
   // No arguments needed, getting it from environment variable
   // $SSH_CLIENT which has the following form for ipv4
@@ -61,22 +116,18 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  // Assemble the final binary and call it
-  memset(sBuf, 0, BUF_SIZE);
-  iTemp = snprintf(sBuf, BUF_SIZE, "%s %s %s", SSHGUARD_BINARY, SSHGUARD_WHITELIST_SWITCH, sIpBuf);
-
-  if ((iTemp < 0) || (sBuf[BUF_SIZE - 1] != 0))
-  {
-    printf("%s : Failed to assemble whitelist command\n", argv[0]);
-
-    return 1;
-  }
-  printf("%s\n", sBuf);
+  // This is stupid. Sshguard as of 2021-08-06 does not add the host
+  // to filelist. Should make a patch...
   xOriginalUid = getuid();
   setuid(0);
-  iTemp = system(sBuf);
+
+  //iTemp = system(sBuf);
   setuid(xOriginalUid);
 
+
+
+
+  
   if (iTemp == 0)
   {
     printf("%s : Successfully whitelisted %s in SshGuard\n", argv[0], sIpBuf);
