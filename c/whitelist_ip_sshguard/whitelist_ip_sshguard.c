@@ -155,6 +155,7 @@ int main(int argc, char *argv[])
   struct sockaddr_in sa;
   int iTemp = 0;
   uid_t xOriginalUid = 0xDEADBEEF;
+  uid_t xOriginalEuid = 0xDEADBEEF;
   int iDuplicates = 0;
 
   // No arguments needed, getting it from environment variable
@@ -202,10 +203,10 @@ int main(int argc, char *argv[])
 
   // This is stupid. Sshguard as of 2021-08-06 does not add the host
   // to filelist. Should make a patch...
-  xOriginalUid = geteuid();
+  xOriginalEuid = geteuid();
   seteuid(0);
   iTemp = whitelist_file_num_duplicates(sIpBuf ,&iDuplicates);
-  seteuid(xOriginalUid);
+  seteuid(xOriginalEuid);
 
   if (iTemp == OP_FAIL)
   {
@@ -222,10 +223,10 @@ int main(int argc, char *argv[])
   }
   if (iDuplicates == 0)
   {
-    xOriginalUid = geteuid();
+    xOriginalEuid = geteuid();
     seteuid(0);
     iTemp = whitelist_file_add(sIpBuf);
-    seteuid(xOriginalUid);
+    seteuid(xOriginalEuid);
   }
   if (iTemp == OP_FAIL)
   {
@@ -235,12 +236,15 @@ int main(int argc, char *argv[])
   }
   // If duplicates: already returned
   // If failing to add: already returned
-  // Try restarting sshguard
+  // Try restarting sshguard (it requires both efective and real uid to be the same
 
-  xOriginalUid = geteuid();
+  xOriginalEuid = geteuid();
+  xOriginalUid = getuid();
   seteuid(0);
+  setuid(0);
   iTemp = system(SSHGUARD_RESTART_PROC);
-  seteuid(xOriginalUid);
+  seteuid(xOriginalEuid);
+  setuid(xOriginalUid);
   
   if (iTemp == 0)
   {
