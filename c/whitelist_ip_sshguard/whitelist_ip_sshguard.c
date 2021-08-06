@@ -1,3 +1,21 @@
+//
+//
+// Usage:
+// gcc -Wall -g whitelist_ip_sshguard.c -o whitelist_ip_sshguard
+// As root:
+// cp whitelist_ip_sshguard /usr/local/sbin
+// chown root:root /usr/local/sbin/whitelist_ip_sshguard
+// chmod u+s /usr/local/sbin/whitelist_ip_sshguard
+//
+// As user
+// Add to .basrc or similiar:
+//
+// if [ -n "$SSH_CLIENT" ];
+// then
+//   /usr/local/sbin/whitelist_ip_sshguard
+// fi
+//
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -12,8 +30,10 @@
 #define OP_OK 1
 #define OP_FAIL 0
 
+
 int whitelist_file_num_duplicates(const char* sIpBuf, int* piDuplicates);
 int whitelist_file_add(const char* sIpBuf);
+
 
 int whitelist_file_num_duplicates(const char* sIpBuf, int* piDuplicates)
 {
@@ -135,11 +155,6 @@ int main(int argc, char *argv[])
   uid_t xOriginalUid = 0xDEADBEEF;
   int iDuplicates = 0;
 
-  
-  //whitelist_file_num_duplicates("172.16.8.1" ,&iTemp);
-  //printf("Found %d\n", iTemp);
-  //whitelist_file_add("172.16.8.1");
-  
   // No arguments needed, getting it from environment variable
   // $SSH_CLIENT which has the following form for ipv4
   // 91.158.138.210 56232 22
@@ -185,10 +200,10 @@ int main(int argc, char *argv[])
 
   // This is stupid. Sshguard as of 2021-08-06 does not add the host
   // to filelist. Should make a patch...
-  xOriginalUid = getuid();
-  setuid(0);
+  xOriginalUid = geteuid();
+  seteuid(0);
   iTemp = whitelist_file_num_duplicates(sIpBuf ,&iDuplicates);
-  setuid(xOriginalUid);
+  seteuid(xOriginalUid);
 
   if (iTemp == OP_FAIL)
   {
@@ -205,10 +220,10 @@ int main(int argc, char *argv[])
   }
   if (iDuplicates == 0)
   {
-    xOriginalUid = getuid();
-    setuid(0);
+    xOriginalUid = geteuid();
+    seteuid(0);
     iTemp = whitelist_file_add(sIpBuf);
-    setuid(xOriginalUid);
+    seteuid(xOriginalUid);
   }
   if (iTemp == OP_FAIL)
   {
@@ -220,7 +235,10 @@ int main(int argc, char *argv[])
   // If failing to add: already returned
   // Try restarting sshguard
 
+  xOriginalUid = geteuid();
+  seteuid(0);
   iTemp = system(SSHGUARD_RESTART_PROC);
+  seteuid(xOriginalUid);
   
   if (iTemp == 0)
   {
@@ -228,14 +246,9 @@ int main(int argc, char *argv[])
 
     return 0;
   }
-  else
-  {
-    printf("%s : Failed to whitelist %s in SshGuard\n", argv[0], sIpBuf);
 
-    return 1;
-  }
-    
-  
+  printf("%s : Failed to whitelist %s in SshGuard\n", argv[0], sIpBuf);
 
   return 1;
+
 }
