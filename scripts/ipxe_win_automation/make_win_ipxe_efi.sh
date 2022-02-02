@@ -1,11 +1,12 @@
 #!/bin/sh
 
-# Give like /make_win_ipxe_efi.sh Win10_21H2_English_x64-2022-02-02 /rwmount/to/ipxe
-#
-# Some day read about this: https://man.archlinux.org/man/mkwinpeimg.1
+# Give like /make_win_ipxe_efi.sh Win10_21H2_English_x64-2022-02-02 /rwmount/to/ipxe_dir /rwmount/to/wims_base_dir
 #
 # apt-get install wimtools
 #
+# Might need non-free repos on debian
+#
+
 
 IPXE_SRC_DIR="/root/ipxe/src"
 IPXE_HTTP_PREFIX="http://172.16.8.254/ipxe"
