@@ -35,12 +35,12 @@ $VERSION = '0.7.2';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Fri 05 Feb 2021 08:37:52 PM EET'
+ changed     => 'Tue 19 Apr 2022 10:32:36 PM EEST'
 );
 
 my $blacklist_chans .= " IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi ";
 
-my $whitelist_twitter_chans .= " IRCnet/#otaniemi "; 
+my $whitelist_twitter_chans .= "  "; 
 
 sub get_title
 {
