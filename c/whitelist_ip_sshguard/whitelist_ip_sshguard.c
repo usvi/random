@@ -28,13 +28,63 @@ fi
 
 #define SSHGUARD_WHITELIST_FILE "/etc/sshguard/whitelist"
 #define SSHGUARD_RESTART_PROC "/usr/sbin/service sshguard restart"
+#define SSHGUARD_CONF_FILE "/etc/sshguard/sshguard.conf"
 #define BUF_SIZE 256
 #define OP_OK 1
 #define OP_FAIL 0
 
 
-int whitelist_file_num_duplicates(const char* sIpBuf, int* piDuplicates);
-int whitelist_file_add(const char* sIpBuf);
+static int sshguardconf_get_ipv4_subnet_suffix(char* sSubnetSuffix);
+static int whitelist_file_num_duplicates(const char* sIpBuf, int* piDuplicates);
+static int whitelist_file_add(const char* sIpBuf);
+
+
+// Gets the configured subnet format from conf file. 
+// Conf:
+// IPV4_SUBNET=24
+// This function would get "/24". If does not exist,
+// function returns empty, but it is still considered valid.
+int sshguardconf_get_ipv4_subnet_suffix(char* sSubnetSuffix)
+{
+  FILE* pConfFile = NULL;
+  char sBuf[BUF_SIZE] = { 0 };
+  char* sPointer = NULL;
+  int iSuffixBits = 0;
+  int iRes = 0;
+
+  // Default value is empty
+  printf(sSubnetSuffix, "");
+  pConfFile = fopen(SSHGUARD_CONF_FILE, "r");
+
+  if (pConfFile == NULL)
+  {
+    return OP_OK;
+  }
+
+  while(!feof(pConfFile))
+  {
+    memset(sBuf, 0, BUF_SIZE);
+    fgets(sBuf, BUF_SIZE - 1, pConfFile);
+    sPointer = strstr(sBuf, "IPV4_SUBNET=");
+
+    if (sPointer != NULL)
+    {
+      sPointer += strlen("IPV4_SUBNET=");
+      iRes = sscanf(sPointer, "%d", &iSuffixBits);
+
+      if (iRes == 1)
+      {
+	// Found, write outgoing buffer and break
+	sprintf(sSubnetSuffix, "/%d", iSuffixBits);
+
+	break;
+      }
+    }
+  }
+  fclose(pConfFile);
+
+  return OP_OK;
+}
 
 
 int whitelist_file_num_duplicates(const char* sIpBuf, int* piDuplicates)
@@ -151,6 +201,8 @@ int whitelist_file_add(const char* sIpBuf)
 int main(int argc, char *argv[])
 {
   char sIpBuf[BUF_SIZE] = { 0 };
+  char sMaskSuffixBuf[BUF_SIZE] = { 0 };
+  char sIpWithMaskSuffixBuf[BUF_SIZE] = { 0 };
   char* sPointer = NULL;
   struct sockaddr_in sa;
   int iTemp = 0;
@@ -200,24 +252,28 @@ int main(int argc, char *argv[])
 
     return 1;
   }
+  // Get mask from conf file and create the final buffer
+  sshguardconf_get_ipv4_subnet_suffix(sMaskSuffixBuf);
+  // Pseudo assignment so there is no compiler nag
+  iTemp = snprintf(sIpWithMaskSuffixBuf, BUF_SIZE, "%s%s", sIpBuf, sMaskSuffixBuf);
 
   // This is stupid. Sshguard as of 2021-08-06 does not add the host
   // to filelist. Should make a patch...
   xOriginalEuid = geteuid();
   seteuid(0);
-  iTemp = whitelist_file_num_duplicates(sIpBuf ,&iDuplicates);
+  iTemp = whitelist_file_num_duplicates(sIpWithMaskSuffixBuf ,&iDuplicates);
   seteuid(xOriginalEuid);
 
   if (iTemp == OP_FAIL)
   {
-    printf("%s : Unable to search duplicates from whitelist %s\n", argv[0], SSHGUARD_WHITELIST_FILE);
+    printf("%s : Unable to search %s duplicates from whitelist %s\n", argv[0], sIpWithMaskSuffixBuf, SSHGUARD_WHITELIST_FILE);
 
     return 1;
   }
 
   if (iDuplicates > 0)
   {
-    printf("%s : IP %s already in SshGuard whitelist %s\n", argv[0], sIpBuf, SSHGUARD_WHITELIST_FILE);
+    printf("%s : %s already in SshGuard whitelist %s\n", argv[0], sIpWithMaskSuffixBuf, SSHGUARD_WHITELIST_FILE);
 
     return 0;
   }
@@ -225,12 +281,12 @@ int main(int argc, char *argv[])
   {
     xOriginalEuid = geteuid();
     seteuid(0);
-    iTemp = whitelist_file_add(sIpBuf);
+    iTemp = whitelist_file_add(sIpWithMaskSuffixBuf);
     seteuid(xOriginalEuid);
   }
   if (iTemp == OP_FAIL)
   {
-    printf("%s : Unable to add IP to whitelist %s\n", argv[0], SSHGUARD_WHITELIST_FILE);
+    printf("%s : Unable to add %s to whitelist %s\n", argv[0], sIpWithMaskSuffixBuf, SSHGUARD_WHITELIST_FILE);
 
     return 1;
   }
@@ -248,12 +304,12 @@ int main(int argc, char *argv[])
   
   if (iTemp == 0)
   {
-    printf("%s : Successfully whitelisted %s in SshGuard\n", argv[0], sIpBuf);
+    printf("%s : Successfully whitelisted %s in SshGuard\n", argv[0], sIpWithMaskSuffixBuf);
 
     return 0;
   }
 
-  printf("%s : Failed to whitelist %s in SshGuard\n", argv[0], sIpBuf);
+  printf("%s : Failed to whitelist %s in SshGuard\n", argv[0], sIpWithMaskSuffixBuf);
 
   return 1;
 
