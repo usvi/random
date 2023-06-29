@@ -27,7 +27,7 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-02-05: Fuck you twitter. Now I'm getting your stupid title via Selenium.
 
 
-$VERSION = '0.7.2';
+$VERSION = '0.7.3';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -40,7 +40,7 @@ $VERSION = '0.7.2';
 
 my $blacklist_chans .= " IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi ";
 
-my $whitelist_twitter_chans .= "  "; 
+my $whitelist_twitter_chans .= " IRCnet/#otaniemi IRCnet/#vimpeli "; 
 
 sub get_title
 {
@@ -66,8 +66,8 @@ sub get_title
 	    }
 	}
 	# Redirect url
-	$url = "http://172.16.8.168:9001/" . $url;
-
+	$url = "http://172.16.8.205:9001/" . $url;
+	
 	if ($blacklisted)
 	{
 	    # Check if in twitter happens to be in whitelist
