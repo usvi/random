@@ -100,7 +100,7 @@ echo "" >> "$IPXE_INST_SCRIPT_FULL_PATH"
 # Need to edit the wim file to contain in cmd something like this
 #wpeinit
 
-#net use j: \\172.16.8.221\Install\Isos\win10
+#net use j: \\172.16.8.221\Isos\win10
 #j:\Win10_21H2_English_x64-2022-02-02.iso_unpacked/setup.exe
 
 
@@ -132,7 +132,7 @@ rm -f "$STARTNET"
 
 printf "wpeinit\r\n" >> "$STARTNET"
 printf "\r\n" >> "$STARTNET"
-printf "net use j: \\\\\\\\172.16.8.221\\\\Install\\\\Isos\\\\win10\r\n" >> "$STARTNET"
+printf "net use j: \\\\\\\\172.16.8.221\\\\Isos\\\\win10\r\n" >> "$STARTNET"
 printf "j:\\\\$IPXE_ID.iso_unpacked\\\\setup.exe\r\n" >> "$STARTNET"
 printf "\r\n" >> "$STARTNET"
 
