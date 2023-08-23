@@ -25,9 +25,10 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2020-09-18: Modified blacklist
 #2020-01-30: Added whitelist support for twitter, reversed order of chan and net.
 #2020-02-05: Fuck you twitter. Now I'm getting your stupid title via Selenium.
+#2023-08-23: Ditto for x.com
 
 
-$VERSION = '0.7.3';
+$VERSION = '0.7.4';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -35,7 +36,7 @@ $VERSION = '0.7.3';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Tue 19 Apr 2022 10:32:36 PM EEST'
+ changed     => 'Wed 23 Aug 2023 07:54:48 PM EEST'
 );
 
 my $blacklist_chans .= " IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi ";
@@ -53,7 +54,9 @@ sub get_title
     my $title = "";
     my $url_uri = URI->new($url);
 
-    if ('twitter.com' eq substr $url_uri->host, -length('twitter.com'))
+    #if ('twitter.com' eq substr $url_uri->host, -length('twitter.com'))
+    if (($url_uri->host == "twitter.com") or ($url_uri->host =~ /\.twitter\.com$/) or
+	($url_uri->host == "x.com") or ($url_uri->host =~ /\.x\.com$/))
     {
 	$use_selenium = 1;
 	
