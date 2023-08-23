@@ -6,7 +6,8 @@
 # sudo apt-get install firefox-geckodriver
 #
 # python3 simple_title_server.py
-# Wget http://172.16.8.168:9001/https://twitter.com/Yrtithepreaa/status/1357623427176235008
+# wget http://172.16.8.205:9001/https://twitter.com/Yrtithepreaa/status/1357623427176235008
+# wget http://172.16.8.205:9001/https://x.com/martinmbauer/status/1694246157851967829
 
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -29,7 +30,7 @@ def get_title(url):
     # websites on the planet.
     #
     # Twitter first
-    if parsed_url.hostname.endswith("twitter.com"):
+    if parsed_url.hostname.endswith("twitter.com") or parsed_url.hostname.endswith("x.com"):
         title = browser.title
         tries = 0
         while tries < 6 and len(title) < 16:
