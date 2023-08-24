@@ -54,9 +54,8 @@ sub get_title
     my $title = "";
     my $url_uri = URI->new($url);
 
-    #if ('twitter.com' eq substr $url_uri->host, -length('twitter.com'))
-    if (($url_uri->host == "twitter.com") or ($url_uri->host =~ /\.twitter\.com$/) or
-	($url_uri->host == "x.com") or ($url_uri->host =~ /\.x\.com$/))
+    if (($url_uri->host eq "twitter.com") or ($url_uri->host =~ /\.twitter\.com$/) or
+	($url_uri->host eq "x.com") or ($url_uri->host =~ /\.x\.com$/))
     {
 	$use_selenium = 1;
 	
