@@ -39,9 +39,9 @@ $VERSION = '0.7.4';
  changed     => 'Wed 23 Aug 2023 07:54:48 PM EEST'
 );
 
-my $blacklist_chans .= " IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi ";
+my $blacklist_chans .= " IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi IRCnet/#scripta ";
 
-my $whitelist_twitter_chans .= " IRCnet/#otaniemi IRCnet/#vimpeli "; 
+my $whitelist_twitter_chans .= " IRCnet/#otaniemi IRCnet/#vimpeli IRCnet/#scripta "; 
 
 sub get_title
 {
