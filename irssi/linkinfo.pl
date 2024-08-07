@@ -28,7 +28,7 @@ $ua->agent("Omaropotti/1.0 (linux-gnu)");
 #2023-08-23: Ditto for x.com
 
 
-$VERSION = '0.7.4';
+$VERSION = '0.7.5';
 %IRSSI =
 (
  authors     => 'Mr. Janne Paalijarvi',
@@ -36,12 +36,12 @@ $VERSION = '0.7.4';
  name        => 'Link info printer',
  description => 'This script prints link info from channels URLs',
  license     => 'GPL',
- changed     => 'Wed 23 Aug 2023 07:54:48 PM EEST'
+ changed     => 'Wed Aug  7 01:48:57 PM EEST 2024'
 );
 
 my $blacklist_chans .= " IRCnet/#IRC-galleria IRCnet/#piraattipuolue PirateIRC/#sivusto PireteIRC/#keski-suomi PirateIRC/#helsinki PirateIRC/#toiminta PirateIRC/#uusimaa PirateIRC/#piraattinuoret PirateIRC/#piraattipuolue IRCnet/#otaniemi IRCnet/#scripta QuakeNet/#ylis.fi ";
 
-my $whitelist_twitter_chans .= " IRCnet/#otaniemi IRCnet/#vimpeli IRCnet/#scripta QuakeNet/#ylis.fi ";
+my $whitelist_twitter_chans .= " IRCnet/#IRC-galleria IRCnet/#otaniemi IRCnet/#vimpeli IRCnet/#scripta QuakeNet/#ylis.fi ";
 
 sub get_title
 {
